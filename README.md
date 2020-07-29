@@ -1,6 +1,6 @@
-# *Paper title*
+# *Tradespace Exploration for Software Defined Farm using RDM*
 
-by *authors*
+by *Shiang, Yifan*
 
 > Fill out the sections below with the information for your paper.
 
