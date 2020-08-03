@@ -1,0 +1,659 @@
+{
+    "Decisions": [
+      {
+        "description": "sensor information",
+        "type": "DS",
+        "importance": 4,
+        "decisions": [
+          {
+            "alternative": "Crop",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Animal",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Resources",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Crop&Animal",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Animal&Resources",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Crop&Resources",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Crop&Resources&Animal",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          }
+          ]
+      },
+      {
+        "description": "iOT Devices",
+        "type": "SF",
+        "importance": 3,
+        "decisions": [
+          {
+            "alternative": "Farmbeats",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 500,
+            "risk": 0
+          },
+          {
+            "alternative": "Own Devices",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 2000,
+            "risk": 0
+          },
+          {
+            "alternative": "Other thrid parties",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 1000,
+            "risk": 0
+          }
+          ]
+      },
+      {
+        "description": "User Interface",
+        "type": "DS",
+        "importance": 2,
+        "decisions": [
+          {
+            "alternative": "Mobile Application",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 100000,
+            "risk": 0
+          },
+          {
+            "alternative": "Website",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 30000,
+            "risk": 0
+          },
+          {
+            "alternative": "Text Messeges",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 5000,
+            "risk": 0
+          },
+          {
+            "alternative": "Mobile Application & Website",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 130000,
+            "risk": 0
+          },
+          {
+            "alternative": "Website & Text Messeges",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 35000,
+            "risk": 0
+          },
+          {
+            "alternative": "Mobile Application & Text Messeges",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 105000,
+            "risk": 0
+          },
+          {
+            "alternative": "Website & Text Messeges & Mobile Application",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 135000,
+            "risk": 0
+          }
+          ]
+      },
+      {
+        "description": "Concurrent User Request",
+        "type": "SF",
+        "importance": 2,
+        "decisions": [
+          {
+            "alternative": "0-100",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "100-500",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "500-10k",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          }
+          ]
+      },
+      {
+        "description": "Data Storage",
+        "type": "SF",
+        "importance": 1,
+        "decisions": [
+          {
+            "alternative": "Blockchain",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 250000,
+            "risk": 0.00005
+          },
+          {
+            "alternative": "Cloud base",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 200000,
+            "risk": 0.0009
+          }
+        ]
+      },
+      {
+        "description": "Data Collection",
+        "type": "DS",
+        "importance": 1,
+        "decisions": [
+          {
+            "alternative": "Manual",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Automatic",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Semi-automatic",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Manual&Semi-automatic",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Automatic&Semi-automatic",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Manu&Automatic",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Manu&Automatic&Semi-automatic",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          }
+        ]
+      },
+      {
+        "description": "Storage Size",
+        "type": "SF",
+        "importance": 1,
+        "decisions": [
+          {
+            "alternative": "500GB",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "500-1000GB",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "1TB-10TB",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          }
+        ]
+      },
+      {
+        "description": "Notification Capabilities",
+        "type": "DS",
+        "importance": 1,
+        "decisions": [
+          {
+            "alternative": "Real-time display",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Text-messege",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Email",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Real-time display & Text-messege",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Text-messege & Email",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Real-time display & Email",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Real-time display & Email & Text-messege",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          }
+        ]
+      },
+      {
+        "description": "File Exchange Type",
+        "type": "SF",
+        "importance": 0.5,
+        "decisions": [
+          {
+            "alternative": "XML",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "CSV",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "JSON",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          }
+        ]
+      },
+      {
+        "description": "ML Model",
+        "type": "SF",
+        "importance": 4,
+        "decisions": [
+          {
+            "alternative": "Bayesian",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0.15
+          },
+          {
+            "alternative": "Regression",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0.1
+          },
+          {
+            "alternative": "Deep Learning",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0.2
+          }
+          ]
+      }
+    ]
+  }

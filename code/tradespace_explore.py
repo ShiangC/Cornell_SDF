@@ -1,0 +1,62 @@
+import json
+from Decision_Model.decision_model import Decision
+
+
+class Tradespace:
+
+    def __init__(self, crop_type):
+        self.decision_pool = self.make_decision_pool()
+        self.policy = []
+        self.decision_num = 10
+        self.crop_type = crop_type
+
+    # Produce a pool of decisions
+    def make_decision_pool(self):
+        json_decisions = []
+        read = open("Decision_Model/decision_evaluation.json", "r")
+        json_decisions = json.load(read)['Decisions']
+        read.close()
+        decsion_pool = []
+        for decision in json_decisions:
+            archs = [Decision(d['performance'], d['cost'], d['risk']) for d in decision['decisions']]
+            decsion_pool.append(archs)
+        return decsion_pool
+
+    # Create a list representing a policy
+    def make_policy(self, d_list):
+        policy = []
+        for i in range(self.decision_num):
+            policy.append(self.decision_pool[i][d_list[i]])
+        self.policy = policy
+        print(policy)
+
+    # Calculating the total benefit from yield increase
+    def calc_r1(self, crop_price):
+        r1 = 0
+        for d in self.policy:
+            r1 += d.yield_increase
+        return r1*crop_price
+
+    # Calculating the total benefit from saved electricity
+    def calc_e1(self, e_price):
+        e1 = 0
+        for d in self.policy:
+            e1 += d.yield_increase
+        return e1 * e_price
+
+    # Calculating the total benefit from saved water usage
+    def calc_e2(self, water_price):
+        e2 = 0
+        for d in self.policy:
+            e2 += d.yield_increase
+        return e2 * w_price
+
+    
+def main():
+    ts = Tradespace(0)
+    ts.make_policy([1,1,1,1,1,1,1,1,1,1])
+    print(ts.calc_r1(10))
+
+
+if __name__ == "__main__":
+    main()
