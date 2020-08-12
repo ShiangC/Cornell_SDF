@@ -1,5 +1,5 @@
 import json
-from Decision_Model.decision_model import Decision
+from .Decision_Model.decision_model import Decision
 
 
 class Tradespace:
@@ -41,17 +41,36 @@ class Tradespace:
     def calc_e1(self, e_price):
         e1 = 0
         for d in self.policy:
-            e1 += d.yield_increase
+            e1 += d.electricity
         return e1 * e_price
 
     # Calculating the total benefit from saved water usage
-    def calc_e2(self, water_price):
+    def calc_e2(self, w_price):
         e2 = 0
         for d in self.policy:
-            e2 += d.yield_increase
+            e2 += d.water
         return e2 * w_price
+    #Calculating the total benefit from saved pesticides
+    def calc_e3(self, p_price):
+        e3 = 0
+        for d in self.policy:
+            e3 += d.pes
+        return e3 * p_price
 
-    
+    #place holder: function calculating total cost of a policy
+    def calc_cost(self):
+        total_cost = 0
+        for d in self.policy:
+            total_cost += d.cost
+        return total_cost
+
+    # place holder: function calculating total risk of a policy
+    def calc_risk(self):
+        total_risk = 0
+        for d in  self.policy:
+            total_risk += d.risk
+        return total_risk
+
 def main():
     ts = Tradespace(0)
     ts.make_policy([1,1,1,1,1,1,1,1,1,1])
