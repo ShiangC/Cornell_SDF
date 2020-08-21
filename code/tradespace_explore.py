@@ -1,5 +1,5 @@
 import json
-from .Decision_Model.decision_model import Decision
+from Decision_Model.decision_model import Decision
 
 
 class Tradespace:
@@ -18,7 +18,7 @@ class Tradespace:
         read.close()
         decsion_pool = []
         for decision in json_decisions:
-            archs = [Decision(d['performance'], d['cost'], d['risk']) for d in decision['decisions']]
+            archs = [Decision(d['alternative'], decision['description'], d['performance'], d['cost'], d['risk']) for d in decision['decisions']]
             decsion_pool.append(archs)
         return decsion_pool
 
@@ -28,7 +28,10 @@ class Tradespace:
         for i in range(self.decision_num):
             policy.append(self.decision_pool[i][d_list[i]])
         self.policy = policy
-        print(policy)
+        return policy
+
+    def print_decision(self, decision):
+        print('--------- ' + decision.description + ': ' + decision.name)
 
     # Calculating the total benefit from yield increase
     def calc_r1(self, crop_price):
@@ -50,14 +53,22 @@ class Tradespace:
         for d in self.policy:
             e2 += d.water
         return e2 * w_price
-    #Calculating the total benefit from saved pesticides
+
+    # Calculating the total benefit from saved pesticides
     def calc_e3(self, p_price):
         e3 = 0
         for d in self.policy:
             e3 += d.pes
         return e3 * p_price
 
-    #place holder: function calculating total cost of a policy
+    # Calculating the total computational stability
+    def calc_e4(self):
+        e4 = 0
+        for d in self.policy:
+            e4 += d.cs
+        return e4
+
+    # place holder: function calculating total cost of a policy
     def calc_cost(self):
         total_cost = 0
         for d in self.policy:
@@ -71,10 +82,35 @@ class Tradespace:
             total_risk += d.risk
         return total_risk
 
+
+def enumerate_policy(ts):
+    enum = []
+    for d1 in range(3):
+        for d2 in  range(3):
+            for d3 in range(3):
+                policy = ts.make_policy([d1, d2, d3, 1, 1, 1, 1, 1, 1, 1])
+                res = {
+                    "policy": policy,
+                    "r1": ts.calc_r1(100),
+                    "e1": ts.calc_e1(1),
+                    "e2": ts.calc_e2(10),
+                    "e4": ts.calc_e4()
+                }
+                enum.append(res)
+    return enum
+
+
 def main():
     ts = Tradespace(0)
-    ts.make_policy([1,1,1,1,1,1,1,1,1,1])
-    print(ts.calc_r1(10))
+    # ts.make_policy([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+    # for decision in ts.policy:
+    #     ts.print_decision(decision)
+    # print('Yield Increase:     ' + str(ts.calc_r1(100)))
+    # print('Electricity Saved:  ' + str(ts.calc_e1(1)))
+    # print('Water Saved:        ' + str(ts.calc_e2(10)))
+    # print('Computational Stability: ' + str(ts.calc_e4()))
+    enum = enumerate_policy(ts)
+    print(len(enum))
 
 
 if __name__ == "__main__":

@@ -12,7 +12,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0
             },
             "KLOC": 5000,
             "cost": 0,
@@ -25,7 +26,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0
             },
             "KLOC": 1500,
             "cost": 0,
@@ -38,59 +40,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 5000,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Crop&Animal",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 5000,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Animal&Resources",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 1500,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Crop&Resources",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 5000,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Crop&Resources&Animal",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0
             },
             "KLOC": 5000,
             "cost": 0,
@@ -106,11 +57,12 @@
           {
             "alternative": "Farmbeats",
             "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
+              "yield_increase": 0.45,
+              "electricity": -0.1,
+              "water": 0.35,
+              "pesticides": 0.35,
+              "labor": 0,
+              "computation": 0
             },
             "KLOC": 5000,
             "cost": 500,
@@ -119,11 +71,12 @@
           {
             "alternative": "Own Devices",
             "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
+              "yield_increase": 0.15,
+              "electricity": -0.5,
+              "water": 0.1,
+              "pesticides": 0.1,
+              "labor": 0,
+              "computation": 0
             },
             "KLOC": 1500,
             "cost": 2000,
@@ -132,11 +85,12 @@
           {
             "alternative": "Other thrid parties",
             "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
+              "yield_increase": 0.3,
+              "electricity": -0.3,
+              "water": 0.2,
+              "pesticides": 0.2,
+              "labor": 0,
+              "computation": 0
             },
             "KLOC": 250,
             "cost": 1000,
@@ -156,7 +110,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0.3,
+              "computation": 0
             },
             "KLOC": 5000,
             "cost": 100000,
@@ -169,7 +124,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0.5,
+              "computation": 0
             },
             "KLOC": 1500,
             "cost": 30000,
@@ -182,62 +138,11 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0.2,
+              "computation": 0
             },
             "KLOC": 5000,
             "cost": 5000,
-            "risk": 0
-          },
-          {
-            "alternative": "Mobile Application & Website",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 5000,
-            "cost": 130000,
-            "risk": 0
-          },
-          {
-            "alternative": "Website & Text Messeges",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 1500,
-            "cost": 35000,
-            "risk": 0
-          },
-          {
-            "alternative": "Mobile Application & Text Messeges",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 1500,
-            "cost": 105000,
-            "risk": 0
-          },
-          {
-            "alternative": "Website & Text Messeges & Mobile Application",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 5000,
-            "cost": 135000,
             "risk": 0
           }
           ]
@@ -254,7 +159,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.5
             },
             "KLOC": 5000,
             "cost": 0,
@@ -267,7 +173,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.4
             },
             "KLOC": 1500,
             "cost": 0,
@@ -280,7 +187,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.3
             },
             "KLOC": 250,
             "cost": 0,
@@ -300,7 +208,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.05
             },
             "KLOC": 5000,
             "cost": 250000,
@@ -313,7 +222,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.5
             },
             "KLOC": 1500,
             "cost": 200000,
@@ -333,7 +243,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": -0.5,
+              "computation": 0.1
             },
             "KLOC": 5000,
             "cost": 0,
@@ -346,7 +257,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0.5,
+              "computation": 0.5
             },
             "KLOC": 1500,
             "cost": 0,
@@ -359,59 +271,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 250,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Manual&Semi-automatic",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 5000,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Automatic&Semi-automatic",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 1500,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Manu&Automatic",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 250,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Manu&Automatic&Semi-automatic",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
+              "labor": 0.2,
+              "computation": 0.3
             },
             "KLOC": 250,
             "cost": 0,
@@ -431,7 +292,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0
             },
             "KLOC": 5000,
             "cost": 0,
@@ -444,7 +306,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.08
             },
             "KLOC": 1500,
             "cost": 0,
@@ -457,7 +320,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.13
             },
             "KLOC": 250,
             "cost": 0,
@@ -477,7 +341,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0.1,
+              "computation": 0.4
             },
             "KLOC": 1500,
             "cost": 0,
@@ -490,7 +355,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.2
             },
             "KLOC": 250,
             "cost": 0,
@@ -503,59 +369,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 5000,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Real-time display & Text-messege",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 1500,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Text-messege & Email",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 250,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Real-time display & Email",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
-            },
-            "KLOC": 5000,
-            "cost": 0,
-            "risk": 0
-          },
-          {
-            "alternative": "Real-time display & Email & Text-messege",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.1
             },
             "KLOC": 5000,
             "cost": 0,
@@ -575,7 +390,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.13
             },
             "KLOC": 5000,
             "cost": 0,
@@ -588,7 +404,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.03
             },
             "KLOC": 1500,
             "cost": 0,
@@ -601,7 +418,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.2
             },
             "KLOC": 250,
             "cost": 0,
@@ -621,7 +439,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.8
             },
             "KLOC": 5000,
             "cost": 0,
@@ -634,7 +453,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 0.4
             },
             "KLOC": 1500,
             "cost": 0,
@@ -647,7 +467,8 @@
               "electricity": 0,
               "water": 0,
               "pesticides": 0,
-              "labor": 0
+              "labor": 0,
+              "computation": 1.0
             },
             "KLOC": 250,
             "cost": 0,
