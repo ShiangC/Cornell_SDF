@@ -7,7 +7,7 @@ from Decision_Model.tradespace_explore import Tradespace
 # import itertools
 # import csv
 
-# plotting options
+# plotting option
 # %matplotlib inline
 # sns.set()
 # sns.set_style('darkgrid')
