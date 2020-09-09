@@ -36,15 +36,18 @@ Please install all software listed below. You should allow all three programs to
 
 ### Prerequisite  Libraries
 Please install all libraries listed below to your python environment.
-- [Rhodium, PRIM, and Platypus](https://github.com/Project-Platypus/Rhodium/blob/master/INSTALL.md)
-- OApackage
-- SKlearn (version lower than 0.22)
-- [J3py](https://github.com/Project-Platypus/J3Py)
+- [Rhodium, PRIM, and Platypus](https://github.com/Project-Platypus/Rhodium/blob/master/INSTALL.md) (Follow instructions here)
+- OApackage: run `pip install oapackage`
+- SKlearn (version lower than 0.22): run `pip install --upgrade scikit-learn==0.20.3`
+- [J3py](https://github.com/Project-Platypus/J3Py) : Download and run `python setup.py install`
 
 ### Run the code
 1. Clone this git repository
 - In the command prompt, create a folder where the code repositories will be stored
-- Run: `git clone `
+- Run: `git clone https://github.com/yifz98/farmVal_Rhodium.git`
+2. Run Tradespace Exploration Tool
+- Navigate to `farmVal_Rhodium/code`
+- Run `python trade_speace_rhodium.py`
 
 
 ## Dependencies
