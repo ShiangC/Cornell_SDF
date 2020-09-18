@@ -5,22 +5,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import oapackage
 import pandas as pd
+from j3 import J3
 
 
 class Tradespace:
 
-    def __init__(self, crop_type):
-        self.decision_pool = self.make_decision_pool()
+    def __init__(self, crop_type, priceVector):
         self.policy = []
         self.decision_num = 10
         self.crop_type = crop_type
-        self.priceVector = {
-            'yield': 100,
-            'electricity': 10,
-            'water': 5,
-            'pesticides': 50,
-            'labor': 300
-        }
+        self.priceVector = priceVector
+        self.decision_pool = self.make_decision_pool()
         self.tradeSpace = self.enumerateTS()
         self.TS_nodes = list(map(self.makeNodes, self.tradeSpace))
 
@@ -35,7 +30,8 @@ class Tradespace:
             archs = {
                 'desc': decision['description'],
                 'type': decision['type'],
-                'alternatives': [Decision(d['alternative'], decision['description'], d['performance'], d['cost'], d['risk']) for d in decision['decisions']]
+                'alternatives': [Decision(d['alternative'], decision['description'], decision['importance'],
+                                          d['performance'], d['cost'], d['risk'], self.priceVector) for d in decision['decisions']]
             }
             decsion_pool.append(archs)
         return decsion_pool
@@ -69,7 +65,6 @@ class Tradespace:
 
             if not policy_pool:
                 policy_pool = combs
-                print('No policy yet: ' + str(policy_pool))
             else:
                 policy_pool = self.__flattenList(list(product(policy_pool, combs)))
 
@@ -80,7 +75,7 @@ class Tradespace:
         total_cost = 0
         total_risk = 0
         for decision in policy:
-            total_perf += decision.getPerf(self.priceVector)
+            total_perf += decision.getPerf()
             total_cost += decision.getCost()
             total_risk += decision.getRisk()
         return {
@@ -91,8 +86,7 @@ class Tradespace:
             'policy': policy
             }
 
-    def plotTS(self):
-        ax = plt.axes(projection='3d')
+    def calcPareto(self):
         # find optimal designs
         pareto = oapackage.ParetoDoubleLong()
         i = 0
@@ -103,21 +97,43 @@ class Tradespace:
         pareto.show(verbose=1)
 
         lst = pareto.allindices()  # the indices of the Pareto optimal designs
-        df = pd.DataFrame(self.TS_nodes)
         optimal_set = []
         for i in lst:
             optimal_set.append(self.TS_nodes[i])
-        optimal_set = pd.DataFrame(optimal_set)
 
+        return optimal_set
+
+
+    def plotTS(self, optimal_set):
+        ax = plt.axes(projection='3d')
+        # find optimal designs
+        # pareto = oapackage.ParetoDoubleLong()
+        # i = 0
+        # for node in self.TS_nodes:
+        #     w = oapackage.doubleVector((node['perf'], -1 * node['cost'], -1 * node['risk']))
+        #     pareto.addvalue(w, i)
+        #     i += 1
+        # pareto.show(verbose=1)
+        #
+        # lst = pareto.allindices()  # the indices of the Pareto optimal designs
+        # df = pd.DataFrame(self.TS_nodes)
+        # optimal_set = []
+        # for i in lst:
+        #     optimal_set.append(self.TS_nodes[i])
+        # optimal_set = pd.DataFrame(optimal_set)
+
+        optimal_set = pd.DataFrame(optimal_set)
+        pd.DataFrame(self.TS_nodes).to_csv(r'../results/tradespace_enumeration.csv')
+        optimal_set.to_csv(r'../results/pareto_set.csv')
         # 3d plots
+        df = pd.DataFrame(self.TS_nodes)
         h = plt.plot(df['perf'], df['cost'], df['risk'], '.b', markersize=8, label='Non Pareto-optimal')
-        hp = plt.plot(optimal_set['perf'], optimal_set['cost'], optimal_set['risk'], '.y', markersize=16, label='Pareto optimal')
+        hp = plt.plot(optimal_set['perf'], optimal_set['cost'], optimal_set['risk'], '.y', markersize=4, label='Pareto optimal')
         ax.set_xlabel('Performance')
         ax.set_ylabel('Cost')
         ax.set_zlabel('Risk')
         _ = plt.title('Pareto Front', fontsize=15)
         plt.show()
-        optimal_set.to_csv(r'../results/pareto_enumeration.csv')
 
     # Calculating the total benefit from yield increase
     def calc_r1(self, crop_price):
