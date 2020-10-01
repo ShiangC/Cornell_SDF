@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Trade Space Exploration for The Software-Defined Farm</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align: center">Trade Space Exploration</h1>
+    <h4 style="text-align: center">For The Software-Defined Farm</h4>
+
+    <div class="area" id="parameter">
+        <h2 style="text-align: center">Parameters:</h2>
+    </div>
+
+    <div class="area" id="function">
+        <h2 style="text-align: center">Functions:</h2>
+        <button class="function_bt" id="generate_ts">Generate TradeSpace</button>
+        <button class="function_bt" id="pareto_ts">Calculate Pareto Front</button>
+        <button class="function_bt" id="setup_model">Update Model</button>
+        <button class="function_bt" id="optimize_ts">Optimize in Scenario</button>
+        <button class="function_bt" id="policy_eval">Evaluate Policy in Uncertainty</button>
+    </div>
+
+        <div class="area" id="log">
+        <h2 style="text-align: center">Log:</h2>
+    </div>
+
+
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th>Task</th>-->
+<!--            <th>Added</th>-->
+<!--            <th>Actions</th>-->
+<!--        </tr>-->
+<!--        {% for task in tasks %}-->
+<!--        <tr>-->
+<!--            <td>{{ task.content }}</td>-->
+<!--            <td>{{ task.date_created.date() }}</td>-->
+<!--            <td>-->
+<!--                <a href="/delete/{{task.id}}">Delete</a>-->
+<!--                <br>-->
+<!--                <a href="/update/{{task.id}}">Update</a>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        {% endfor %}-->
+<!--    </table>-->
+
+<!--    <div class="form">-->
+<!--        <form action="/" method="POST">-->
+<!--            <input type="text" name="content" id="content">-->
+<!--            <input type="submit" value="Add Task">-->
+<!--        </form>-->
+<!--    </div>-->
+</div>
+{% endblock %}
