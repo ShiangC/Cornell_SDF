@@ -1,56 +1,264 @@
 {% extends 'base.html' %}
 
 {% block head %}
+<script type="text/javascript" src="{{ url_for('static', filename='visual.js') }}"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
 <title>Trade Space Exploration for The Software-Defined Farm</title>
 {% endblock %}
 
 {% block body %}
-<div class="content">
+<div class="content" style="width: 30%">
     <h1 style="text-align: center">Trade Space Exploration</h1>
     <h4 style="text-align: center">For The Software-Defined Farm</h4>
-
+    <p style="text-align: center; font-family: 'Arial Narrow'">
+        <br>Tradespace Exploration is a decision-support tool developed to find the optimal architectural designs for The Software Defined Farm using a Robust Decision Making framework. <br><br>
+        This tool has the capability of identifying potential robust strategies for the architectural design, analyzing the vulnerability of each strategy, and evaluate their performance in deep uncertainties.
+    </p>
+</div>
+<div class="content">
     <div class="area" id="parameter">
         <h2 style="text-align: center">Parameters:</h2>
+        <div class="form">
+            <form action="/" method="POST" >
+                <label for="crop">Crop Type: </label>
+                <input type="text" name="crop" id="crop" value="0"><br>
+                <label for="latitude">Latitude: </label>
+                <input type="text" name="latitude" id="latitude" value="45"><br>
+                <label for="numOfUsers">User Amount: </label>
+                <input type="text" name="numOfUsers" id="numOfUsers" value="1000"><br>
+                <label for="sampEn">SampEn: </label>
+                <input type="text" name="sampEn" id="sampEn" value="2.68"><br>
+                <label for="rainfall">Precipitation: </label>
+                <input type="text" name="rainfall" id="rainfall" value="1302.775"><br>
+                <input type="submit" value="Update Model">
+            </form>
+        </div>
     </div>
 
     <div class="area" id="function">
         <h2 style="text-align: center">Functions:</h2>
-        <button class="function_bt" id="generate_ts">Generate TradeSpace</button>
+        <a href="/generate"><button class="function_bt" id="generate_ts">Generate TradeSpace</button></a>
         <button class="function_bt" id="pareto_ts">Calculate Pareto Front</button>
         <button class="function_bt" id="setup_model">Update Model</button>
         <button class="function_bt" id="optimize_ts">Optimize in Scenario</button>
         <button class="function_bt" id="policy_eval">Evaluate Policy in Uncertainty</button>
     </div>
 
-        <div class="area" id="log">
+    <div class="area" id="log">
         <h2 style="text-align: center">Log:</h2>
+        <textarea id="log_area"></textarea>
     </div>
 
+    <div class="output" id="output">
+        <h2 style="text-align: center">Output:</h2>
+        <textarea id="output_area">{{ output }}</textarea>
+    </div>
 
-<!--    <table>-->
-<!--        <tr>-->
-<!--            <th>Task</th>-->
-<!--            <th>Added</th>-->
-<!--            <th>Actions</th>-->
-<!--        </tr>-->
-<!--        {% for task in tasks %}-->
-<!--        <tr>-->
-<!--            <td>{{ task.content }}</td>-->
-<!--            <td>{{ task.date_created.date() }}</td>-->
-<!--            <td>-->
-<!--                <a href="/delete/{{task.id}}">Delete</a>-->
-<!--                <br>-->
-<!--                <a href="/update/{{task.id}}">Update</a>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--        {% endfor %}-->
-<!--    </table>-->
+    <div class="output" id="vis1">
+        <h2 style="text-align: center">Trade Space Visualization:</h2>
+        <svg id="scatterplot" height="400" width="400" style="margin: 20px auto; display: block;" >
+    </div>
 
-<!--    <div class="form">-->
-<!--        <form action="/" method="POST">-->
-<!--            <input type="text" name="content" id="content">-->
-<!--            <input type="submit" value="Add Task">-->
-<!--        </form>-->
-<!--    </div>-->
 </div>
+
+<script id="controller">
+    let log = document.getElementById("log_area")
+    let btn_pareto_ts = document.getElementById("pareto_ts")
+    let btn_update_model = document.getElementById("setup_model")
+    let btn_optimize = document.getElementById("optimize_ts")
+    let btn_policy_eval = document.getElementById("policy_eval")
+    var log_count = 1;
+
+    function insertText(text) {
+        log.value = "**************************************************\n" + "[ " + log_count + " ]  " + text + "\n" + "\n" + log.value;
+        log_count ++;
+    }
+
+    btn_pareto_ts.addEventListener("click", function (){
+        insertText("Calculating Pareto Fronts, Please wait for outputs...");
+    });
+
+    btn_update_model.addEventListener("click", function (){
+        insertText("Updated Model");
+    });
+
+    btn_optimize.addEventListener("click", function (){
+        insertText("Optimizing pareto front based on uncertainty...");
+    });
+
+    btn_policy_eval.addEventListener("click", function (){
+        insertText("Runing Scenario Discovery, Please wait for outputs...");
+    });
+
+
+
+
+</script>
+
+
+<script id="visual1">
+    const svg = d3.select("svg#scatterplot");
+    const width = svg.attr("width");
+    const height = svg.attr("height");
+    const margins = {"top": 10, "right": 10, "bottom": 50, "left": 50}; // Can leave out quotes
+    const chartWidth = width - margins.left - margins.right;
+    const chartHeight = height - margins.top - margins.bottom;
+
+    let scatter = svg.append("g")
+                    .attr("transform","translate("+margins.left+","+margins.top+")");
+
+
+    // 1. Import some CSV data
+    // We're going to use d3.csv, which loads data from the web. It returns a "promise" that some time in the future it will have the data
+    // .then is triggered by the promise if it successfully calls back
+    // otherwise an error may be recorded
+
+    // This is important because it allows us to work "asynchronously" and not hold up the browser
+    // We'll see another construction that's even more flexible later this term (async + await)
+
+    // .then( function(successfulResult), function(errorMessage) )
+    d3.csv("{{ url_for('static', filename='gapminder.csv') }}")
+      .then( (data) => {
+
+    console.log(data)
+
+    // 2. Check for data issues
+
+    // Let's fix some things up
+    data.forEach( (d, i) => {
+      d['life'] = Number(d['Life Expectancy']);
+      d['gdp'] = Number(d['GDP/Person (PPP$)']);
+      // d['Total Population'] = Number(d['Total Population']); // This will pump out NaNs. Why?
+      d['pop'] = Number(d['Total Population'].replace(/,/g,"")); // Fix with replace for commas
+    });
+
+    // See stuff below 5
+    data = data.filter( (d) => {return d['gdp'] != 0 && d['life'] != 0 && d['pop'] != 0;}  );
+    console.log(data)
+
+
+    // 3. Let's build some scales
+    const gdpMin = d3.min(data, (d) => {return d['gdp'];} );
+      // d3.minmax takes in two params, first is the array, second is the "getter" function for each element -- you have to tell d3.max what values you want it to inspect
+    const gdpMax = d3.max(data, (d) => {return d['gdp'];} );
+    const gdpScale = d3.scaleLinear().domain([gdpMin+1, gdpMax]).range([0, chartWidth]);
+
+    const lifeMin = d3.min(data, (d) => {return d['life'];} );
+    const lifeMax = d3.max(data, (d) => {return d['life'];} );
+    const lifeScale = d3.scaleLinear().domain([lifeMin, lifeMax])
+                        .range([chartHeight, 0]); // invert height for coord system!
+
+    const popMin = d3.min(data, (d) => {return d['pop'];} );
+    const popMax = d3.max(data, (d) => {return d['pop'];} );
+    const popScale = d3.scaleLinear().domain([popMin, popMax]).range([5,10]); // circle size
+
+    // Yes, the (d) => {return d['pop'];} stuff gets clunky. I'm doing it mainly to reinforce that you are sending functions to d3.max and d3.min
+
+    // We'll check out the alternate formulation, d => d['pop'] on Monday
+    //   Hint: you can use this style when your function is returning a value immediately
+
+
+    // 5. Start plotting circles and see what happens
+    data.forEach( (d, i) => {
+
+      scatter.append("circle")
+          .attr("cx", gdpScale(d['gdp']))
+          .attr("cy", lifeScale(d['life']))
+          .attr("r", popScale(d['pop']))
+          .attr("opacity", 0.8)
+          .attr("index", i)  // I usually include the index as an extra attr so that if points look weird, I can find out what's going on in the datasets
+          .style("fill", "steelblue");
+
+    });
+
+
+    // See that it looks VERY weird --
+    //  EXAMINE INDEX 177
+    // add:
+    // data = data.filter( (d) => {return d['gdp'] != 0;}  );
+    // This fixes a few points, but there are still 0s skewing our scales.
+    // Check again and find a life expectancy of 0 too which we have to fix
+    // data = data.filter( (d) => {return d['gdp'] != 0 && d['life'] != 0 && d['pop'] != 0;}  );
+
+    // array.filter is a builtin JS function
+    // It loops through the array, making a new array based on filter criteria
+    // You give it a function that takes in an object and returns true if it should stick around or false if the object should be eliminated by the filter
+    //  We use && here because we want to make sure our points have good values for ALL of those keys
+
+    // We'll put the filter command before we set the scales
+
+
+    // 4. Let's add some axes
+    // We're going to use D3's axis tools to do it
+    let leftAxis = d3.axisLeft(lifeScale);
+    svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform","translate("+(margins.left-10)+","+margins.top+")")
+      .call(leftAxis);
+
+    // Why do we use call? It's because axisBottom returns a function that we want to execute
+    // You can think of d3.axis as giving you a function that "pastes" the axis labels into an element
+    //  By running the axis function on an SVG group, we "paste" some new SVG elements into the group
+    // Call is just shorthand for "run this function on the current entity we're chaining"
+    let bottomAxis = d3.axisBottom(gdpScale).ticks(6)  // .ticks tells it how many ticks to draw
+    let element = svg.append("g")
+                    .attr("class", "y axis")
+                    .attr("transform","translate("+margins.left+","+(chartHeight+margins.top+10)+")");
+    bottomAxis(element); // this is how you'd replace .call(bottomAxis) -- don't do this!
+
+
+
+    // 5A. We can manually make some gridlines
+    //  It would work fine for HW3, but I don't recommend it once you start using axis labels
+
+    // for (let i=0; i <= chartWidth; i = i + chartWidth/10) {
+    //     scatter.append("line")
+    //       .attr("x1",i)
+    //       .attr("x2",i)
+    //       .attr("y1",0)
+    //       .attr("y2",chartHeight)
+    //       .attr("stroke","lightgrey")
+    //       .attr("stroke-width","1px");
+    // }
+
+    // 5B. Or we can use axes in a clever way
+    //  Create the axis
+    //   Configure it so that tickFormat is empty (don't make text labels)
+    //   Set tickSize to be a negative number, so instead of hanging below the chart the gridlined extend back into it
+
+    //  FINALLY, don't forget to use CSS to configure the gridlines a bit
+    //   You will want to make the <line> elements a bit lighter and hide the element that has class .domain (that's the perpendicular line that connects the ticks)
+    //   See CSS in head of this file for example
+    let leftGridlines = d3.axisLeft(lifeScale)
+                          .tickSize(-chartWidth-10)
+                          .tickFormat("");
+    // Notice how we use a different class
+    svg.append("g").attr("class", "y gridlines") // See CSS at top of file
+      .attr("transform","translate("+ (margins.left-10) +","+ margins.top +")")
+      .call(leftGridlines);
+    // Make sure to set a gridlines class so you can distinguish it from your axes when styling
+
+
+    // The real benefit is that you can use the same configurations on your gridline axis that you used on your label axis. For example, we can put a tick number here
+    let bottomGridlines = d3.axisBottom(gdpScale)
+                            .tickSize(-chartHeight-10)
+                            .tickFormat("")
+                            .ticks(6); // Borrowing from our axis labels
+    svg.append("g").attr("class", "x gridlines") // See CSS at top of file
+      .attr("transform","translate("+margins.left+","+(chartHeight+margins.top+10)+")")
+      .call(bottomGridlines);
+
+
+    // NOTE: Our gridlines show up on top of the points. In practice you'll want to draw the circles last, or make an SVG group to hold the axes and then make your chart group after.
+
+    // Next up: filtering, legends, and advanced formatting
+
+
+    // The second parameter of a .then() returns an error -- handle it gracefully
+    }, (error) => {
+    console.log(error);
+    } );
+
+</script>
+
 {% endblock %}

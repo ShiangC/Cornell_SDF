@@ -27,11 +27,14 @@ td {
 }
 
 .form {
-    margin-top: 20px;
+    margin: 20px auto;
+    display: block;
+    width: 50%;
 }
 
-#content {
+.content {
     width: 70%;
+    margin-top: 20px;
 }
 
 .function_bt{
@@ -42,5 +45,26 @@ td {
 .area{
     width: 33.1%;
     float: left;
+    margin-top: 40px;
     /*border: 1px solid #aaaaaa;*/
+}
+
+#log_area{
+    width: 100%;
+    height: 200px;
+    resize: none;
+}
+
+#output_area{
+    width: 100%;
+    height: 400px;
+    resize: none;
+}
+
+.output{
+    width: 60%;
+    margin: 60px auto;
+    padding-top: 40px;
+    clear: both;
+    display: block;
 }

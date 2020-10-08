@@ -175,5 +175,5 @@ def main():
     gui_start()
 
 
-if __name__ == "__main__":
-     main()
+# if __name__ == "__main__":
+#      main()
