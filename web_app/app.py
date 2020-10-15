@@ -1,6 +1,7 @@
-from flask import Flask, render_template, url_for, request, redirect, Response
+from flask import Flask, render_template, url_for, request, redirect, Response, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from Decision_Model import tradespace_explore
+from Rhodium_Model.trade_speace_rhodium import TradeSpaceRhodium
 import subprocess
 
 app = Flask(__name__)
@@ -24,10 +25,12 @@ priceVector = {
                 'labor': 300
             }
 ts = None
+r_model = TradeSpaceRhodium()
+paretoSet = None
+model = None
+optimalSet = None
 
-
-def generate():
-    ts = tradespace_explore.Tradespace(0, priceVector)
+results = ""
 
 
 @app.route('/')
@@ -35,25 +38,46 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/generate')
+@app.route('/generate', methods=['GET'])
 def generate_ts():
-    def inner():
-        # proc = subprocess.Popen(
-        #     generate(),  # call something with a lot of output so we can see it
-        #     shell=True,
-        #     stdout=subprocess.PIPE
-        # )
-        proc = subprocess.run(generate(), stdout=subprocess.PIPE)
-        print(proc.stdout.readline())
-        for line in iter(proc.stdout.readline, ''):
-            # yield line.rstrip() + '<br/>\n'
-            new_output = Outputs(content=line.rstrip())
-            db.session.add(new_output)
-            db.session.commit()
+    global ts
+    if ts is None:
+        ts = tradespace_explore.Tradespace(0, priceVector)
+    res = make_response("Generate TS Success")
+    res.status = '200'
+    res.headers['ts_len'] = len(ts.tradeSpace)
+    return res
 
-    inner()
-    outputs = db.Outputs.query.order_by(Outputs.id).all()
-    return render_template('index.html', output=outputs)
+
+@app.route('/pareto', methods=['GET'])
+def pareto():
+    global paretoSet
+    if paretoSet is None:
+        paretoSet = ts.calcPareto()
+        ts.plotTS(paretoSet)
+    res = make_response("Calc Pareto Success")
+    res.status = '200'
+    res.headers['ps_len'] = len(paretoSet)
+    return res
+
+
+@app.route('/update_model', methods=['GET'])
+def update_model():
+    global model
+    model = r_model.setupModel(r_model.farm_approach2, paretoSet, 1000, 45, 2.68, 1302.775, 1)
+    res = make_response("Update Model Success")
+    res.status = '200'
+    return res
+
+@app.route('/optimize')
+def optimize():
+    global optimalSet
+    optimalSet = r_model.optimizeModel(model)
+    res = make_response("Optimize Success")
+    res.status = '200'
+    res.headers['ps_len'] = len(optimalSet)
+    return res
+
 
 
 

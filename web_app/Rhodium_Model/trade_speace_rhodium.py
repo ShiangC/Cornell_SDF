@@ -88,7 +88,7 @@ class TradeSpaceRhodium():
         # fig = scatter3d(model, output, c="risk",
         #                 brush=[Brush("performance > 500"), Brush("performance <= 500")])
         output.as_dataframe(['performance', 'cost', 'risk', 'node', 'policy_names'])\
-              .to_csv(r'../results/rhodium_optimize.csv')
+              .to_csv(r'../web_app/static/rhodium_optimize.csv')
         return output
 
 

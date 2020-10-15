@@ -37,11 +37,11 @@
 
     <div class="area" id="function">
         <h2 style="text-align: center">Functions:</h2>
-        <a href="/generate"><button class="function_bt" id="generate_ts">Generate TradeSpace</button></a>
-        <button class="function_bt" id="pareto_ts">Calculate Pareto Front</button>
-        <button class="function_bt" id="setup_model">Update Model</button>
-        <button class="function_bt" id="optimize_ts">Optimize in Scenario</button>
-        <button class="function_bt" id="policy_eval">Evaluate Policy in Uncertainty</button>
+        <button class="function_bt" id="generate_ts">Generate TradeSpace</button>
+        <button class="function_bt" id="pareto_ts" disabled="true">Calculate Pareto Front</button>
+        <button class="function_bt" id="setup_model" disabled="true">Update Model</button>
+        <button class="function_bt" id="optimize_ts" disabled="true">Optimize in Scenario</button>
+        <button class="function_bt" id="policy_eval" disabled="true">Evaluate Policy in Uncertainty</button>
     </div>
 
     <div class="area" id="log">
@@ -49,24 +49,33 @@
         <textarea id="log_area"></textarea>
     </div>
 
-    <div class="output" id="output">
+    <div class="output" id="output" style="text-align: center">
         <h2 style="text-align: center">Output:</h2>
-        <textarea id="output_area">{{ output }}</textarea>
+        <div id="output_box" class="output"></div>
     </div>
 
-    <div class="output" id="vis1">
-        <h2 style="text-align: center">Trade Space Visualization:</h2>
-        <svg id="scatterplot" height="400" width="400" style="margin: 20px auto; display: block;" >
-    </div>
+<!--    <div class="output" id="vis1" hidden>-->
+<!--        <h2 style="text-align: center">Trade Space Visualization:</h2>-->
+<!--        <svg id="scatterplot" height="400" width="400" style="margin: 20px auto; display: block;" >-->
+<!--    </div>-->
 
 </div>
 
 <script id="controller">
+    let crop = document.getElementById("crop")
+    let latitude = document.getElementById("latitude")
+    let numOfUsers = document.getElementById("numOfUsers")
+    let sampEn = document.getElementById("sampEn")
+    let rainfall = document.getElementById("rainfall")
+
+
     let log = document.getElementById("log_area")
+    let btn_generate = document.getElementById("generate_ts")
     let btn_pareto_ts = document.getElementById("pareto_ts")
     let btn_update_model = document.getElementById("setup_model")
     let btn_optimize = document.getElementById("optimize_ts")
     let btn_policy_eval = document.getElementById("policy_eval")
+    let output_area = document.getElementById("output_box")
     var log_count = 1;
 
     function insertText(text) {
@@ -74,25 +83,111 @@
         log_count ++;
     }
 
+    function insertResults(content, format, link){
+        if(format === 'text'){
+            let p = document.createElement('p');
+            let node = document.createTextNode(content);
+            p.appendChild(node);
+            p.class = "results"
+            output_area.appendChild(p);
+            return p;
+        }
+        if (format === 'link'){
+            let a = document.createElement('a');
+            let node = document.createTextNode(content);
+            a.appendChild(node);
+            a.href = link;
+            output_area.appendChild(a);
+            return a;
+        }
+        if(format === 'img'){
+            let img = document.createElement('IMG');
+            img.src = link;
+            img.alt = "plot"
+            output_area.appendChild(img);
+            return img;
+        }
+        if(format === 'h3'){
+            let p = document.createElement('h3');
+            let node = document.createTextNode(content);
+            p.appendChild(node);
+            output_area.appendChild(p);
+            return p;
+        }
+    }
+
+
+    btn_generate.addEventListener("click", function (){
+        insertText("Generating TradeSpace, Please wait for outputs...");
+        btn_generate.disabled = true;
+        insertResults("----------- Generate Trade Space -----------", "h3", null);
+        let p = insertResults("Pending results......", "text", null);
+        fetch("/generate")
+            .then(res => {
+                let ts_len = res.headers.get('ts_len');
+                console.log(ts_len);
+                p.innerText = "Found " + ts_len + " possible policies in the trade space.";
+                insertResults("The trade space is saved in:", "text", null);
+                insertResults("TradeSpace", "link", "{{ url_for('static', filename='tradespace_enumeration.csv') }}");
+                insertResults("         ", "text", null);
+                btn_pareto_ts.disabled = false;
+            });
+
+    });
+
     btn_pareto_ts.addEventListener("click", function (){
         insertText("Calculating Pareto Fronts, Please wait for outputs...");
+        btn_pareto_ts.disabled = true;
+        insertResults("----------- Calculate Pareto Front -----------", "h3", null);
+        let p = insertResults("Pending results......", "text", null);
+        fetch("/pareto")
+            .then(res => {
+                let ps_len = res.headers.get('ps_len');
+                console.log(ps_len);
+                p.innerText = "Found " + ps_len + " pareto optimal policies in the trade space without uncertainty.";
+                insertResults("Pareto Front is saved here:", "text", null);
+                insertResults("Pareto Front without uncertainty", "link", "{{ url_for('static', filename='pareto_set.csv') }}");
+                insertResults("", "img", "{{url_for('static', filename='pareto_ts.png')}}");
+                insertResults("       ", "text", null);
+                btn_update_model.disabled = false;
+            });
     });
 
     btn_update_model.addEventListener("click", function (){
         insertText("Updated Model");
+        insertResults("----------- Update Uncertainty Model -----------", "h3", null);
+        let p = insertResults("Pending results......", "text", null);
+        fetch("/update_model")
+            .then(res => {
+                let ps_len = res.headers.get('ps_len');
+                console.log(ps_len);
+                p.innerText = "The updated uncertainty model:";
+                insertResults("Crop Type: " + crop.getAttribute("value"), "text", null);
+                insertResults("Latitude: " + latitude.getAttribute("value"), "text", null);
+                insertResults("Number of Users: " + numOfUsers.getAttribute("value"), "text", null);
+                insertResults("SampEn: " + sampEn.getAttribute("value"), "text", null);
+                insertResults("Precipitation: " + rainfall.getAttribute("value"), "text", null);
+                insertResults("       ", "text", null);
+                btn_optimize.disabled = false;
+            });
     });
 
     btn_optimize.addEventListener("click", function (){
         insertText("Optimizing pareto front based on uncertainty...");
+        insertResults("----------- Pareto Front with Uncertainty -----------", "h3", null);
+        let p = insertResults("Pending results......", "text", null);
+        fetch("/optimize")
+            .then(res => {
+                let ps_len = res.headers.get('ps_len');
+                p.innerText = "With the defined uncertainty model, found " + ps_len + " optimal policies:" ;
+                insertResults("Optimal Set with Uncertainty", "link", "{{ url_for('static', filename='rhodium_optimize.csv') }}");
+                btn_policy_eval.disabled = false;
+            });
     });
 
     btn_policy_eval.addEventListener("click", function (){
         insertText("Runing Scenario Discovery, Please wait for outputs...");
     });
-
-
-
-
 </script>
 
 
