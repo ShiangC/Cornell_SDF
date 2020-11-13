@@ -69,6 +69,7 @@ def update_model():
     res.status = '200'
     return res
 
+
 @app.route('/optimize')
 def optimize():
     global optimalSet
@@ -76,6 +77,21 @@ def optimize():
     res = make_response("Optimize Success")
     res.status = '200'
     res.headers['ps_len'] = len(optimalSet)
+    return res
+
+
+@app.route('/policy_eval')
+def policy_eval():
+    r_model.policyEval(model, optimalSet['node'], 1000, 45, 2.68, 1302.775, 1)
+    res = make_response("Eval Success")
+    res.status = '200'
+    return res
+
+@app.route('/sa')
+def sensitivity_analysis():
+    r_model.SA(model, optimalSet['node'], 1000, 45, 2.68, 1302.775, 1)
+    res = make_response("SA Success")
+    res.status = '200'
     return res
 
 

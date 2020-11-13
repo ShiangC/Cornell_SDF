@@ -119,16 +119,16 @@ class TradeSpaceRhodium():
             # avg_result = pd.DataFrame(average_result)
             # df = df.append(avg_result, ignore_index=True)
 
-        df.to_csv(r'../results/rhodium_policy_eval.csv')
-        fig = px.parallel_coordinates(df, color="index", labels={"performance": "performance",
-                                                                      "cost": "cost", "risk": "risk",
-                                                                      "numOfUsers": "numOfUsers", "sampEn": "sampEn", },
-                                      color_continuous_scale=px.colors.diverging.Tealrose,
-                                      color_continuous_midpoint=10)
+        df.to_csv(r'../web_app/static/rhodium_policy_eval.csv')
+        # fig = px.parallel_coordinates(df, color="index", labels={"performance": "performance",
+        #                                                               "cost": "cost", "risk": "risk",
+        #                                                               "numOfUsers": "numOfUsers", "sampEn": "sampEn", },
+        #                               color_continuous_scale=px.colors.diverging.Tealrose,
+        #                               color_continuous_midpoint=10)
 
         # fig = px.scatter(df, x="performance", y="cost", color="index",
         #                 size='risk', hover_data=['index'])
-        fig.show()
+        # fig.show()
 
 
         # J3(df)
@@ -141,8 +141,9 @@ class TradeSpaceRhodium():
     # Scenario Discovery
     def SD(self, results):
         print('\x1b[0;32;44m' + '************ Scenario Discovery using PRIM ************' + '\x1b[0m')
-        classification = results.apply("'Effective' if performance > 450 else 'Ineffective'")
-        p = Prim(results, classification, include=model.uncertainties.keys(), coi="Effective")
+        effective = results.apply("'Effective' if performance > 450 else 'Ineffective'")
+
+        p = Prim(results, effective, include=model.uncertainties.keys(), coi="Effective")
         box = p.find_box()
         # fig = box.show_tradeoff()
         # box.show_details()
@@ -150,12 +151,20 @@ class TradeSpaceRhodium():
 
     def SA(self, model, nodes, numOfUsers, latitude, sampEn, rainfall, crop_type):
         # Sensitivity Analysis
+        df = pd.DataFrame()
         print('\x1b[0;32;44m' + '************ Sensitivity Analysis ************' + '\x1b[0m')
-        sample = {"node": nodes[0], "numOfUsers": numOfUsers, "latitude": latitude, "sampEn": sampEn, "rainfall": rainfall,
-                  "crop_type": crop_type}
-        result_s = sa(model, "performance", policy=sample, method="sobol", nsamples=1000)
-        print(result_s)
-        fig = result_s.plot()
+        for i in range(len(nodes)):
+            sample = {"node": nodes[i], "numOfUsers": numOfUsers, "latitude": latitude, "sampEn": sampEn,
+                      "rainfall": rainfall,
+                      "crop_type": crop_type}
+            results = sa(model, "cost", policy=sample, method="sobol", nsamples=1000)
+            print(results)
+            # results = results.as_dataframe(['performance', 'cost', 'risk', 'numOfUsers', 'latitude', 'sampEn', 'rainfall'])
+            # df = df.append(results, ignore_index=True)
+
+        # result_s = sa(model, "performance", policy=sample, method="sobol", nsamples=1000)
+        # print(result_s)
+        # fig = result_s.plot()
 
 
     # def main():

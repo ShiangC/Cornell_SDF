@@ -27,7 +27,7 @@ td {
 }
 
 .form {
-    margin: 20px auto;
+    margin: 2px auto;
     display: block;
     width: 50%;
 }
@@ -51,7 +51,7 @@ td {
 
 #log_area{
     width: 100%;
-    height: 200px;
+    height: 400px;
     resize: none;
 }
 
@@ -67,4 +67,10 @@ td {
     padding-top: 40px;
     clear: both;
     display: block;
+}
+
+.vis{
+    margin: 5px auto;
+    display: block;
+    height: 800px;
 }

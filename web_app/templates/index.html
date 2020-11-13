@@ -3,6 +3,10 @@
 {% block head %}
 <script type="text/javascript" src="{{ url_for('static', filename='visual.js') }}"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <title>Trade Space Exploration for The Software-Defined Farm</title>
 {% endblock %}
 
@@ -30,7 +34,25 @@
                 <input type="text" name="sampEn" id="sampEn" value="2.68"><br>
                 <label for="rainfall">Precipitation: </label>
                 <input type="text" name="rainfall" id="rainfall" value="1302.775"><br>
-                <input type="submit" value="Update Model">
+                <text><br></text>
+                <div id="metrics" hidden>
+                    <p>Metrics Range</p>
+                    <p>
+                      <label for="cost">Cost:</label>
+                      <input type="text" id="cost" readonly style="border:0; color:#4668f5; font-weight:bold;">
+                    </p>
+                    <div id="cost-range"></div>
+                    <p>
+                      <label for="performance">Performance:</label>
+                      <input type="text" id="performance" readonly style="border:0; color:#4668f5; font-weight:bold;">
+                    </p>
+                    <div id="perf-range"></div>
+                    <p>
+                      <label for="risk">Risk:</label>
+                      <input type="text" id="risk" readonly style="border:0; color:#4668f5; font-weight:bold;">
+                    </p>
+                    <div id="risk-range"></div>
+                </div>
             </form>
         </div>
     </div>
@@ -42,6 +64,7 @@
         <button class="function_bt" id="setup_model" disabled="true">Update Model</button>
         <button class="function_bt" id="optimize_ts" disabled="true">Optimize in Scenario</button>
         <button class="function_bt" id="policy_eval" disabled="true">Evaluate Policy in Uncertainty</button>
+        <button class="function_bt" id="SA" disabled="true">Sensitivity Analysis</button>
     </div>
 
     <div class="area" id="log">
@@ -53,6 +76,11 @@
         <h2 style="text-align: center">Output:</h2>
         <div id="output_box" class="output"></div>
     </div>
+
+<!--    <div class="output" id="visual" style="text-align: center">-->
+<!--        <h2 style="text-align: center">Visualizations:</h2>-->
+<!--        <div id='eval_vis' class="vis"></div>-->
+<!--    </div>-->
 
 <!--    <div class="output" id="vis1" hidden>-->
 <!--        <h2 style="text-align: center">Trade Space Visualization:</h2>-->
@@ -75,8 +103,19 @@
     let btn_update_model = document.getElementById("setup_model")
     let btn_optimize = document.getElementById("optimize_ts")
     let btn_policy_eval = document.getElementById("policy_eval")
+    let btn_sa = document.getElementById("SA")
     let output_area = document.getElementById("output_box")
+    let metric_area = document.getElementById("metrics")
     var log_count = 1;
+
+
+    function updateTextInput() {
+        let perf = document.getElementById('performance').value
+        let cost = document.getElementById('cost').value
+        let risk = document.getElementById('risk').value
+
+        document.getElementById('ratio').innerText= 'Cost : Perf : Risk = ' + cost + ':' + perf + ':' + risk;
+    }
 
     function insertText(text) {
         log.value = "**************************************************\n" + "[ " + log_count + " ]  " + text + "\n" + "\n" + log.value;
@@ -114,6 +153,48 @@
             output_area.appendChild(p);
             return p;
         }
+        if (format === 'visual'){
+            let vis = document.createElement('div');
+            vis.id = content;
+            vis.class = 'vis';
+            output_area.appendChild(vis);
+            return vis;
+        }
+    }
+
+    function updateMetricRange(){
+        $( "#cost-range" ).slider({
+            range: true,
+            min: 87,
+            max: 283.75,
+            values: [ 87, 283.75 ],
+            slide: function( event, ui ) {
+                $( "#cost" ).val( ui.values[ 0 ] + "k ~ " + ui.values[ 1 ] + "k" );
+            }
+        });
+        $( "#cost" ).val( $( "#cost-range" ).slider( "values", 0 ) + "k ~ " + $( "#cost-range" ).slider( "values", 1 ) + "k" );
+
+        $( "#perf-range" ).slider({
+            range: true,
+            min: 277,
+            max: 700,
+            values: [ 277, 700 ],
+            slide: function( event, ui ) {
+                $( "#performance" ).val( ui.values[ 0 ] + " ~ " + ui.values[ 1 ] );
+            }
+        });
+        $( "#performance" ).val( $( "#perf-range" ).slider( "values", 0 ) + " ~ " + $( "#perf-range" ).slider( "values", 1 ) );
+
+        $( "#risk-range" ).slider({
+            range: true,
+            min: 0,
+            max: 1,
+            values: [ 0, 1 ],
+            slide: function( event, ui ) {
+                $( "#risk" ).val( ui.values[ 0 ] + " ~ " + ui.values[ 1 ] );
+            }
+        });
+        $( "#risk" ).val( $( "#risk-range" ).slider( "values", 0 ) + " ~ " + $( "#risk-range" ).slider( "values", 1 ) );
     }
 
 
@@ -148,8 +229,14 @@
                 insertResults("Pareto Front is saved here:", "text", null);
                 insertResults("Pareto Front without uncertainty", "link", "{{ url_for('static', filename='pareto_set.csv') }}");
                 insertResults("", "img", "{{url_for('static', filename='pareto_ts.png')}}");
+                let id = 'pareto_set' + log_count;
+                insertResults(id, 'visual', '');
+                let hover_txt = insertResults("", "text", null);
+                plot_pareto_front(id);
                 insertResults("       ", "text", null);
                 btn_update_model.disabled = false;
+                updateMetricRange();
+                metric_area.hidden = false;
             });
     });
 
@@ -167,6 +254,7 @@
                 insertResults("Number of Users: " + numOfUsers.getAttribute("value"), "text", null);
                 insertResults("SampEn: " + sampEn.getAttribute("value"), "text", null);
                 insertResults("Precipitation: " + rainfall.getAttribute("value"), "text", null);
+                // insertResults("Metrics Priority Ratio = " + document.getElementById('ratio').innerText, "text", null);
                 insertResults("       ", "text", null);
                 btn_optimize.disabled = false;
             });
@@ -181,15 +269,350 @@
                 let ps_len = res.headers.get('ps_len');
                 p.innerText = "With the defined uncertainty model, found " + ps_len + " optimal policies:" ;
                 insertResults("Optimal Set with Uncertainty", "link", "{{ url_for('static', filename='rhodium_optimize.csv') }}");
+                let id = 'optimize' + log_count;
+                insertResults(id, 'visual', '');
+                plot_optimize(id);
                 btn_policy_eval.disabled = false;
             });
     });
 
     btn_policy_eval.addEventListener("click", function (){
         insertText("Runing Scenario Discovery, Please wait for outputs...");
+        insertResults("----------- Optimal Policies in Uncertain States-Of-Worlds -----------", "h3", null);
+        let p = insertResults("Pending results......", "text", null);
+        fetch("/policy_eval")
+            .then(res => {
+                p.innerText = "Results of evaluating the optimal policies in an uncertain environment modeled by 1000 SOWs:" ;
+                insertResults("Optimal Set with Uncertainty", "link", "{{ url_for('static', filename='rhodium_policy_eval.csv') }}");
+                let id = 'policy_eval' + log_count;
+                let div = insertResults(id, 'visual', '');
+                plot_policy_eval(id);
+                btn_sa.disabled = false;
+            });
     });
+
+    btn_sa.addEventListener("click", function (){
+        insertText("Generating Sensitivity Analysis...");
+        insertResults("----------- Sensitivity Analysis -----------", "h3", null);
+        let p = insertResults("Pending results......", "text", null);
+        fetch("/sa")
+            .then(res => {
+
+                p.innerText = "SA:" ;
+            });
+    });
+
 </script>
 
+<script id="plotly">
+
+    function plot_pareto_front(div) {
+        Plotly.d3.csv("{{ url_for('static', filename='pareto_set.csv') }}", function (err, ts) {
+
+            function unpack(rows, key) {
+                return rows.map(function (row) {
+                    return row[key];
+                });
+            }
+
+            function unpack_size(rows, key) {
+                return rows.map(function (row) {
+                    return Math.round(row[key] * 10) - 18;
+                });
+            }
+
+            var data = [{
+                x: unpack(ts, 'perf'),
+                y: unpack(ts, 'cost'),
+                z: unpack(ts, 'risk'),
+                text: unpack(ts, 'policy_names'),
+                mode: 'markers',
+                type: 'scatter3d',
+                marker: {
+                    color: 'rgb(24,182,69)',
+                    opacity: 0.6,
+                    size: 2
+                },
+                hovertemplate:
+                "Cost: %{y}<br>" +
+                "Performance: %{x}<br>" +
+                "Risk: %{z}<br>"
+            },
+                // {
+                //     type: 'scatter3d',
+                //     mode: "markers",
+                //     x: unpack(ps, 'performance'),
+                //     y: unpack(ps, 'cost'),
+                //     z: unpack(ps, 'risk'),
+                //     marker: {
+                //         color: 'rgb(116,255,17)',
+                //         opacity: 0.8,
+                //         size: 3
+                //     }
+                // }
+            ];
+            console.log(data);
+
+            var layout = {
+                autosize: true,
+                height: 800,
+                scene: {
+                    aspectratio: {
+                        x: 1,
+                        y: 1,
+                        z: 1
+                    },
+                    camera: {
+                        center: {
+                            x: 0,
+                            y: 0,
+                            z: 0
+                        },
+                        eye: {
+                            x: 1.25,
+                            y: 1.25,
+                            z: 1.25
+                        },
+                        up: {
+                            x: 0,
+                            y: 0,
+                            z: 1
+                        }
+                    },
+                    xaxis: {
+                        title: 'Performance',
+                        type: 'linear',
+                        zeroline: false
+                    },
+                    yaxis: {
+                        title: 'Cost',
+                        type: 'linear',
+                        zeroline: false
+                    },
+                    zaxis: {
+                        title: 'Risk',
+                        type: 'linear',
+                        zeroline: false
+                    }
+                },
+                title: {
+                    text: 'Pareto Front Zoomed In',
+                    font: {
+                        size: 18,
+                    }
+                }
+            };
+
+            Plotly.newPlot(div, data, layout, {displayModeBar: false});
+
+            document.getElementById(div).on('plotly_click', function(data){
+                var pts = '';
+                for(var i=0; i < data.points.length; i++){
+                    pts = 'Performance: '+data.points[i].x +'\n' +
+                          'Cost: '+ data.points[i].y + '\n' +
+                          'Risk: ' + data.points[i].z + '\n\n' +
+                          'Policy: ' + data.points[i].text + '\n';
+                }
+                alert('Policy Selected:\n\n'+pts);
+            });
+        });
+    }
+
+    function plot_optimize(div){
+        Plotly.d3.csv("{{ url_for('static', filename='rhodium_optimize.csv') }}", function (err, rows) {
+
+            function unpack(rows, key) {
+                return rows.map(function (row) {
+                    return row[key];
+                });
+            }
+
+            function unpack_size(rows, key) {
+                return rows.map(function (row) {
+                    return Math.round(row[key] *100000 ) - 2000;
+                });
+            }
+
+            var data = [{
+                x: unpack(rows, 'performance'),
+                y: unpack(rows, 'cost'),
+                z: unpack(rows, 'risk'),
+                text: unpack(rows, 'policy_names'),
+                mode: 'markers',
+                type: 'scatter3d',
+                marker: {
+                    opacity: 0.8,
+                    size: 5
+                },
+                hovertemplate:
+                "Cost: %{y}<br>" +
+                "Performance: %{x}<br>" +
+                "Risk: %{z}<br>"
+            }];
+            console.log(data);
+
+            var layout = {
+                autosize: true,
+                height: 800,
+                scene:{
+                    xaxis: {
+                        title: 'Performance',
+                        type: 'linear',
+                        zeroline: false
+                    },
+                    yaxis: {
+                        title: 'Cost',
+                        type: 'linear',
+                        zeroline: false
+                    },
+                    zaxis: {
+                        title: 'Risk',
+                        type: 'linear',
+                        zeroline: false
+                    }
+                },
+                title: {
+                    text: 'Optimal Policies in Uncertainty',
+                    font: {
+                        size: 18,
+                    }
+                }
+            };
+
+            Plotly.newPlot(div, data, layout, {displayModeBar: false});
+
+            document.getElementById(div).on('plotly_click', function(data){
+                var pts = '';
+                for(var i=0; i < data.points.length; i++){
+                    pts = 'Performance: '+data.points[i].x +'\n' +
+                          'Cost: '+ data.points[i].y + '\n' +
+                          'Risk: ' + data.points[i].z + '\n\n' +
+                          'Policy: ' + data.points[i].text + '\n';
+                }
+                alert('Policy Selected:\n\n'+pts);
+            });
+        });
+    }
+
+    function plot_policy_eval(div) {
+
+        Plotly.d3.csv("{{ url_for('static', filename='rhodium_policy_eval.csv') }}", function (err, rows) {
+
+            var perf = [], cost = [], risk = [], numOfUsers = [], latitude = [], sampEn = [], rainfall = [], index = [], color = []
+            var colorway = ['#229a25','#e07a93' ,'#71145a','#821b31','#f3cec9', '#e7a4b6', '#cd7eaf', '#a262a9', '#6f4d96', '#3d3b72', '#182844']
+
+            for (var i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                perf.push(row["performance"]);
+                cost.push(row["cost"]);
+                risk.push(row["risk"]);
+                numOfUsers.push(Math.abs(row["numOfUsers"]-1000));
+                latitude.push(row["latitude"]);
+                sampEn.push(Math.abs(row["sampEn"] -2.68) * 300);
+                rainfall.push(row["rainfall"]);
+                index.push(row["index"]);
+                color.push(colorway[row["index"]]);
+            }
+
+
+            var data = [{
+                x: perf,
+                y: cost,
+                z: risk,
+                numOfUsers: numOfUsers,
+                latitude: latitude,
+                sampEn: sampEn,
+                rainfall: rainfall,
+                mode: 'markers',
+                type: 'scatter3d',
+                marker: {
+                    color: color,
+                    opacity: 0.5,
+                    size: sampEn,
+                    sizeref: 10,
+                    line:{
+                        opacity: 0.1,
+                        color: color
+                    }
+                },
+                transforms: [{ type: "groupby", groups: index }],
+                hovertemplate:
+                "Cost: %{y}<br>" +
+                "Performance: %{x}<br>" +
+                "Risk: %{z}<br>"
+            }];
+            console.log(data);
+
+            var layout = {
+                autosize: true,
+                height: 800,
+                scene: {
+                    aspectratio: {
+                        x: 1,
+                        y: 1,
+                        z: 1
+                    },
+                    camera: {
+                        center: {
+                            x: 0,
+                            y: 0,
+                            z: 0
+                        },
+                        eye: {
+                            x: 1.25,
+                            y: 1.25,
+                            z: 1.25
+                        },
+                        up: {
+                            x: 0,
+                            y: 0,
+                            z: 1
+                        }
+                    },
+                    xaxis: {
+                        title: 'Performance',
+                        type: 'linear',
+                        zeroline: false
+                    },
+                    yaxis: {
+                        title: 'Cost',
+                        type: 'linear',
+                        zeroline: false
+                    },
+                    zaxis: {
+                        title: 'Risk',
+                        type: 'linear',
+                        zeroline: false
+                    }
+                },
+                title: {
+                    text: 'Evaluation of Optimal Policies in Uncertainty',
+                    font: {
+                        size: 18,
+                    }
+                }
+            };
+
+            Plotly.newPlot(div, data, layout, {displayModeBar: false});
+
+            document.getElementById(div).on('plotly_click', function(data){
+                var pts = '';
+                for(var i=0; i < data.points.length; i++){
+                    pts = 'Performance: '+data.points[i].x +'\n' +
+                          'Cost: '+ data.points[i].y + '\n' +
+                          'Risk: ' + data.points[i].z + '\n\n' +
+                          'Uncertainty: \n' +
+                          'Number of Users: ' + data.points[i].data.numOfUsers[i] + '\n' +
+                          'Latitude: ' + data.points[i].data.latitude[i] + '\n' +
+                          'Rainfall: ' + data.points[i].data.rainfall[i] + '\n' +
+                          'SampEn: ' + data.points[i].data.sampEn[i] + '\n';
+                }
+                alert('Policy Selected:\n\n'+pts);
+            });
+        });
+    }
+
+</script>
 
 <script id="visual1">
     const svg = d3.select("svg#scatterplot");
