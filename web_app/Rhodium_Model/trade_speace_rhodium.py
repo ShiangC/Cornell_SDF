@@ -25,6 +25,7 @@ class TradeSpaceRhodium():
             d_risk = decision.getRisk()
             if decision.description == 'User Interface' or decision.description == 'Data Collection':
                 performance -= d_perf * (latitude / 1000) # Account for the latitude effects
+                performance += d_perf * (rainfall / 1000)
             if decision.description == 'ML Model':
                 performance = performance - d_perf + (-1 / 9 * (sampEn ** 2) + 1) * d_perf # Account for the climate complexity effects
                 risk = risk - d_risk + (-1 / 9 * (sampEn ** 2) + 1) * d_risk
@@ -55,13 +56,13 @@ class TradeSpaceRhodium():
 
 
     # Setup the model
-    def setupModel(self, func, nodes, input_numOfUsers, input_latitude, input_sampleEn, input_rainFall, input_cropType):
+    def setupModel(self, func, nodes, input_numOfUsers, input_latitude, input_sampleEn, input_rainFall, input_cropType, cost_range, perf_range, risk_range):
         # Setting up Rhodium Model
         model = Model(func)
         model.parameters = [Parameter("node"),
                             Parameter("numOfUsers", default_value=input_numOfUsers),
                             Parameter("latitude", default_value=input_latitude),
-                            Parameter("sampEn", default_value=input_sampleEn) ,
+                            Parameter("sampEn", default_value=input_sampleEn),
                             Parameter("rainfall", default_value=input_rainFall),
                             Parameter("crop_type", default_value=input_cropType)]
 
@@ -70,14 +71,18 @@ class TradeSpaceRhodium():
                            Response("risk", Response.MINIMIZE),
                            Response("node", Response.INFO),
                            Response("policy_names", Response.INFO)]
-        model.constraints = []
+
+        model.constraints = [Constraint("cost >= " + str(cost_range[0] * 1000)),
+                             Constraint("cost <= " + str(cost_range[1] * 1000)),
+                             Constraint("performance >= " + str(perf_range[0])),
+                             Constraint("performance <= " + str(perf_range[1]))]
 
         model.levers = [CategoricalLever("node", nodes)]
 
         model.uncertainties = [NormalUncertainty("numOfUsers", input_numOfUsers, 100),
                                NormalUncertainty("latitude", input_latitude, 3),
-                               NormalUncertainty("sampEn", 2.68, 0.136),
-                               NormalUncertainty("rainfall", 1302.775, 555.243)]
+                               NormalUncertainty("sampEn", input_sampleEn, 0.136),
+                               NormalUncertainty("rainfall", input_rainFall, 555.243)]
         return model
 
 
@@ -97,6 +102,7 @@ class TradeSpaceRhodium():
         print('\x1b[0;32;44m' + '************ Policy Evaluation ************' + '\x1b[0m')
         df = pd.DataFrame()
         SOWs = sample_lhs(model, 1000)
+        rd_res = []
 
         for i in range(len(nodes)):
             sample = {"node": nodes[i], "numOfUsers": numOfUsers, "latitude": latitude, "sampEn": sampEn,
@@ -104,6 +110,7 @@ class TradeSpaceRhodium():
                       "crop_type": crop_type}
             results = evaluate(model, update(SOWs, sample))
             index = [i] * 1000
+            rd_res.append(results)
             results = results.as_dataframe(['performance', 'cost', 'risk', 'numOfUsers', 'latitude', 'sampEn', 'rainfall'])
             results['index'] = index
             df = df.append(results, ignore_index=True)
@@ -120,6 +127,7 @@ class TradeSpaceRhodium():
             # df = df.append(avg_result, ignore_index=True)
 
         df.to_csv(r'../web_app/static/rhodium_policy_eval.csv')
+        return rd_res
         # fig = px.parallel_coordinates(df, color="index", labels={"performance": "performance",
         #                                                               "cost": "cost", "risk": "risk",
         #                                                               "numOfUsers": "numOfUsers", "sampEn": "sampEn", },
@@ -139,15 +147,15 @@ class TradeSpaceRhodium():
 
 
     # Scenario Discovery
-    def SD(self, results):
+    def SD(self, results, model, perf_range, cost_range, risk_range):
         print('\x1b[0;32;44m' + '************ Scenario Discovery using PRIM ************' + '\x1b[0m')
-        effective = results.apply("'Effective' if performance > 450 else 'Ineffective'")
+        effective = results[0].apply("'Effective' if performance >= " + str(perf_range[0]) + " else 'Ineffective'")
 
-        p = Prim(results, effective, include=model.uncertainties.keys(), coi="Effective")
+        p = Prim(results[0], effective, include=model.uncertainties.keys(), coi="Effective")
         box = p.find_box()
-        # fig = box.show_tradeoff()
-        # box.show_details()
-        # plt.show()
+        fig = box.show_tradeoff()
+        box.show_details()
+        plt.show()
 
     def SA(self, model, nodes, numOfUsers, latitude, sampEn, rainfall, crop_type):
         # Sensitivity Analysis

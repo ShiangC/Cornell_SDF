@@ -61,7 +61,7 @@
         <h2 style="text-align: center">Functions:</h2>
         <button class="function_bt" id="generate_ts">Generate TradeSpace</button>
         <button class="function_bt" id="pareto_ts" disabled="true">Calculate Pareto Front</button>
-        <button class="function_bt" id="setup_model" disabled="true">Update Model</button>
+        <button class="function_bt" id="setup_model">Update Model</button>
         <button class="function_bt" id="optimize_ts" disabled="true">Optimize in Scenario</button>
         <button class="function_bt" id="policy_eval" disabled="true">Evaluate Policy in Uncertainty</button>
         <button class="function_bt" id="SA" disabled="true">Sensitivity Analysis</button>
@@ -95,6 +95,10 @@
     let numOfUsers = document.getElementById("numOfUsers")
     let sampEn = document.getElementById("sampEn")
     let rainfall = document.getElementById("rainfall")
+
+    let cost_range = [0, 1000];
+    let perf_range = [0, 1500];
+    let risk_range = [0, 1];
 
 
     let log = document.getElementById("log_area")
@@ -165,22 +169,25 @@
     function updateMetricRange(){
         $( "#cost-range" ).slider({
             range: true,
-            min: 87,
-            max: 283.75,
-            values: [ 87, 283.75 ],
+            min: 0,
+            max: 1000,
+            values: [ 0, 1000 ],
             slide: function( event, ui ) {
                 $( "#cost" ).val( ui.values[ 0 ] + "k ~ " + ui.values[ 1 ] + "k" );
+                cost_range = ui.values;
             }
         });
         $( "#cost" ).val( $( "#cost-range" ).slider( "values", 0 ) + "k ~ " + $( "#cost-range" ).slider( "values", 1 ) + "k" );
 
+
         $( "#perf-range" ).slider({
             range: true,
-            min: 277,
-            max: 700,
-            values: [ 277, 700 ],
+            min: 0,
+            max: 1500,
+            values: [ 0, 1500 ],
             slide: function( event, ui ) {
                 $( "#performance" ).val( ui.values[ 0 ] + " ~ " + ui.values[ 1 ] );
+                perf_range = ui.values;
             }
         });
         $( "#performance" ).val( $( "#perf-range" ).slider( "values", 0 ) + " ~ " + $( "#perf-range" ).slider( "values", 1 ) );
@@ -192,6 +199,7 @@
             values: [ 0, 1 ],
             slide: function( event, ui ) {
                 $( "#risk" ).val( ui.values[ 0 ] + " ~ " + ui.values[ 1 ] );
+                risk_range = ui.values;
             }
         });
         $( "#risk" ).val( $( "#risk-range" ).slider( "values", 0 ) + " ~ " + $( "#risk-range" ).slider( "values", 1 ) );
@@ -244,17 +252,26 @@
         insertText("Updated Model");
         insertResults("----------- Update Uncertainty Model -----------", "h3", null);
         let p = insertResults("Pending results......", "text", null);
-        fetch("/update_model")
-            .then(res => {
-                let ps_len = res.headers.get('ps_len');
-                console.log(ps_len);
+        let data = {rainfall: rainfall.value, latitude: latitude.value,
+            numOfUsers: numOfUsers.value, sampEn: sampEn.value,
+            crop: crop.value, cost_range: cost_range, perf_range: perf_range, risk_range: risk_range};
+        fetch("/update_model", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: new Headers({
+                "content-type": "application/json"
+            })
+        }).then(res => {
                 p.innerText = "The updated uncertainty model:";
-                insertResults("Crop Type: " + crop.getAttribute("value"), "text", null);
-                insertResults("Latitude: " + latitude.getAttribute("value"), "text", null);
-                insertResults("Number of Users: " + numOfUsers.getAttribute("value"), "text", null);
-                insertResults("SampEn: " + sampEn.getAttribute("value"), "text", null);
-                insertResults("Precipitation: " + rainfall.getAttribute("value"), "text", null);
+                insertResults("Crop Type: " + crop.value, "text", null);
+                insertResults("Latitude: " + latitude.value, "text", null);
+                insertResults("Number of Users: " + numOfUsers.value, "text", null);
+                insertResults("SampEn: " + sampEn.value, "text", null);
+                insertResults("Precipitation: " + rainfall.value, "text", null);
                 // insertResults("Metrics Priority Ratio = " + document.getElementById('ratio').innerText, "text", null);
+                insertResults("Cost Range: " + cost_range[0] + "k ~ " + cost_range[1] + "k", "text", null);
+                insertResults("Performance Range: " + perf_range[0] + " ~ " + perf_range[1], "text", null);
+                insertResults("Risk Range: " + risk_range[0] + " ~ " + risk_range[1], "text", null);
                 insertResults("       ", "text", null);
                 btn_optimize.disabled = false;
             });
@@ -351,7 +368,14 @@
                 //     }
                 // }
             ];
-            console.log(data);
+
+            // Get metric range from dataset
+            //console.log(data[0].y);
+            // let costs = data[0].y.map(el => parseInt(el))
+            // let perfs = data[0].x.map(el => parseInt(el))
+            // cost_range = [Math.min(...costs), Math.max(...costs)]
+            // perf_range = [Math.min(...perfs), Math.max(...perfs)]
+            console.log(cost_range)
 
             var layout = {
                 autosize: true,
@@ -498,20 +522,29 @@
 
         Plotly.d3.csv("{{ url_for('static', filename='rhodium_policy_eval.csv') }}", function (err, rows) {
 
-            var perf = [], cost = [], risk = [], numOfUsers = [], latitude = [], sampEn = [], rainfall = [], index = [], color = []
-            var colorway = ['#229a25','#e07a93' ,'#71145a','#821b31','#f3cec9', '#e7a4b6', '#cd7eaf', '#a262a9', '#6f4d96', '#3d3b72', '#182844']
+            var perf = [], cost = [], risk = [], numOfUsers = [], latitude = [], sampEn = [], rainfall = [], index = [], color = [], opacity = []
+            var colorway = ['#000000','#f8a6c1' ,'#ec4ac0','#fcaf50','#f3cec9', '#e7a4b6', '#cd7eaf', '#a262a9', '#6f4d96', '#50fc67', '#182844']
 
             for (var i = 0; i < rows.length; i++) {
                 let row = rows[i];
                 perf.push(row["performance"]);
                 cost.push(row["cost"]);
                 risk.push(row["risk"]);
-                numOfUsers.push(Math.abs(row["numOfUsers"]-1000));
+                numOfUsers.push(Math.abs(row["numOfUsers"] - 1000));
                 latitude.push(row["latitude"]);
-                sampEn.push(Math.abs(row["sampEn"] -2.68) * 300);
+                sampEn.push(Math.abs(row["sampEn"] - 2.68) * 300);
                 rainfall.push(row["rainfall"]);
                 index.push(row["index"]);
-                color.push(colorway[row["index"]]);
+
+                if(row["performance"] >= perf_range[0] && row["performance"] <= perf_range[1] &&
+                    row["cost"] >= cost_range[0] * 1000 && row["cost"] <= cost_range[1] * 1000 &&
+                    row["risk"] >= risk_range[0] && row["risk"] <= risk_range[1]) {
+                    opacity.push(0.6)
+                    color.push(colorway[Number(row["index"]) + 1]);
+                }else{
+                    opacity.push(0.3)
+                    color.push(colorway[0])
+                }
             }
 
 
@@ -527,7 +560,7 @@
                 type: 'scatter3d',
                 marker: {
                     color: color,
-                    opacity: 0.5,
+                    opacity: opacity,
                     size: sampEn,
                     sizeref: 10,
                     line:{
@@ -541,7 +574,7 @@
                 "Performance: %{x}<br>" +
                 "Risk: %{z}<br>"
             }];
-            console.log(data);
+            console.log(index);
 
             var layout = {
                 autosize: true,
