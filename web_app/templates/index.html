@@ -64,6 +64,7 @@
         <button class="function_bt" id="setup_model">Update Model</button>
         <button class="function_bt" id="optimize_ts" disabled="true">Optimize in Scenario</button>
         <button class="function_bt" id="policy_eval" disabled="true">Evaluate Policy in Uncertainty</button>
+        <button class="function_bt" id="SD" disabled="true">Scenario Discovery</button>
         <button class="function_bt" id="SA" disabled="true">Sensitivity Analysis</button>
     </div>
 
@@ -107,6 +108,7 @@
     let btn_update_model = document.getElementById("setup_model")
     let btn_optimize = document.getElementById("optimize_ts")
     let btn_policy_eval = document.getElementById("policy_eval")
+    let btn_sd = document.getElementById("SD")
     let btn_sa = document.getElementById("SA")
     let output_area = document.getElementById("output_box")
     let metric_area = document.getElementById("metrics")
@@ -304,6 +306,22 @@
                 let id = 'policy_eval' + log_count;
                 let div = insertResults(id, 'visual', '');
                 plot_policy_eval(id);
+                btn_sd.disabled = false;
+            });
+    });
+
+    btn_sd.addEventListener("click", function (){
+        insertText("Generating Scenario Discovery...");
+        insertResults("----------- Scenario Discovery -----------", "h3", null);
+        let p = insertResults("Pending results......", "text", null);
+        fetch("/sd")
+            .then(res => {
+                let stats = res.headers.get("stats")
+                console.log(typeof stats)
+                p.innerText = "Results from Patient Rule Induction Method" ;
+                insertResults("", "img", "{{url_for('static', filename='SD_tradeOff.png')}}");
+                insertResults("", "img", "{{url_for('static', filename='SD_detail.png')}}");
+                insertResults(JSON.stringify(JSON.parse(stats), null, "\n"), "text", null);
                 btn_sa.disabled = false;
             });
     });
@@ -314,8 +332,9 @@
         let p = insertResults("Pending results......", "text", null);
         fetch("/sa")
             .then(res => {
+                let stats = res.headers.get("stats")
+                console.log(stats)
 
-                p.innerText = "SA:" ;
             });
     });
 

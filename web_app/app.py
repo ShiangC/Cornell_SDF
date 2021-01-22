@@ -119,12 +119,21 @@ def policy_eval():
     res.status = '200'
     return res
 
+@app.route('/sd')
+def scenario_discovery():
+    box = r_model.SD(eval_res, model, perf_range, cost_range, risk_range)
+    # r_model.SA(model, optimalSet['node'], numOfUsers, latitude, sampEn, rainfall, 1)
+    res = make_response("SD Success")
+    res.status = '200'
+    res.headers['stats'] = box
+    return res
+
 @app.route('/sa')
 def sensitivity_analysis():
-    r_model.SD(eval_res, model, perf_range, cost_range, risk_range)
-    # r_model.SA(model, optimalSet['node'], numOfUsers, latitude, sampEn, rainfall, 1)
+    stats = r_model.SA(model, optimalSet['node'], numOfUsers, latitude, sampEn, rainfall, 1)
     res = make_response("SA Success")
     res.status = '200'
+    res.headers['stats'] = stats
     return res
 
 

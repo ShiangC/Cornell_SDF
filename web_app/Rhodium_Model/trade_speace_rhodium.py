@@ -7,6 +7,7 @@ import numpy as np
 import itertools
 import csv
 import plotly.express as px
+import json
 
 
 class TradeSpaceRhodium():
@@ -149,30 +150,66 @@ class TradeSpaceRhodium():
     # Scenario Discovery
     def SD(self, results, model, perf_range, cost_range, risk_range):
         print('\x1b[0;32;44m' + '************ Scenario Discovery using PRIM ************' + '\x1b[0m')
-        effective = results[0].apply("'Effective' if performance >= " + str(perf_range[0]) + " else 'Ineffective'")
+        effective = results[0].apply("'Effective' if performance >= " + str(perf_range[0]) +
+                                     " and cost <= " + str(cost_range[1] * 1000) + " else 'Ineffective'")
 
-        p = Prim(results[0], effective, include=model.uncertainties.keys(), coi="Effective")
+        p = Prim(results[0], effective, include=["numOfUsers", "sampEn", "latitude"], coi="Effective")
         box = p.find_box()
+        details = box.show_details()
+        details.show()
+        details.savefig('../web_app/static/SD_detail.png')
         fig = box.show_tradeoff()
-        box.show_details()
-        plt.show()
+        fig.show()
+        fig.savefig('../web_app/static/SD_tradeOff.png')
+        scatter = box.show_scatter()
+        scatter.show()
+        ppt = box.show_ppt()
+        ppt.show()
+
+        print(model.uncertainties.keys())
+        print(p.stats)
+        print(p.limits)
+        print(p.find_all())
+
+        return p.stats.to_json()
+
 
     def SA(self, model, nodes, numOfUsers, latitude, sampEn, rainfall, crop_type):
         # Sensitivity Analysis
-        df = pd.DataFrame()
+        # df = pd.DataFrame()
         print('\x1b[0;32;44m' + '************ Sensitivity Analysis ************' + '\x1b[0m')
-        for i in range(len(nodes)):
-            sample = {"node": nodes[i], "numOfUsers": numOfUsers, "latitude": latitude, "sampEn": sampEn,
-                      "rainfall": rainfall,
-                      "crop_type": crop_type}
-            results = sa(model, "cost", policy=sample, method="sobol", nsamples=1000)
-            print(results)
-            # results = results.as_dataframe(['performance', 'cost', 'risk', 'numOfUsers', 'latitude', 'sampEn', 'rainfall'])
-            # df = df.append(results, ignore_index=True)
+        sample = {"node": nodes[0], "numOfUsers": numOfUsers, "latitude": latitude, "sampEn": sampEn,
+                  "rainfall": rainfall,
+                  "crop_type": crop_type}
 
-        # result_s = sa(model, "performance", policy=sample, method="sobol", nsamples=1000)
-        # print(result_s)
-        # fig = result_s.plot()
+        results = sa(model, "cost", policy= sample, method="sobol", nsamples=1000)
+        print(results)
+        fig = results.plot()
+        fig.show()
+        sob_fig = results.plot_sobol()
+        sob_fig.show()
+        print(results.items())
+
+        res = sa(model, "performance", policy=sample, method="morris", nsamples=1000, num_levels=4, grid_jump=2)
+        print(res)
+
+        return js_res
+
+
+        # for i in range(len(nodes)):
+        #     sample = {"node": nodes[i], "numOfUsers": numOfUsers, "latitude": latitude, "sampEn": sampEn,
+        #               "rainfall": rainfall,
+        #               "crop_type": crop_type}
+        #     results = sa(model, "cost", policy=sample, method="sobol", nsamples=1000)
+        #     print(results)
+        #     fig = results.plot()
+        #     fig.show()
+        #     sob_fig = results.plot_sobol()
+        #     sob_fig.show()
+        #     print(results.items())
+        #
+        #     res = sa(model, "performance", policy=sample, method="morris", nsamples=1000, num_levels=4, grid_jump=2)
+        #     print(res)
 
 
     # def main():
