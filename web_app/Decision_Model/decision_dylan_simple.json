@@ -1,0 +1,93 @@
+{
+    "Decisions": [
+      {
+        "description": "Water Tensiometer",
+        "type": "SF",
+        "importance": 1.0,
+        "decisions": [
+          {
+            "alternative": "Manual",
+            "performance": {
+              "yield_increase": 0.1,
+              "electricity": 0,
+              "water": 0.2,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0
+            },
+            "KLOC": 5000,
+            "cost": 600,
+            "cost_formula": "15 per hour * 1/6 hour * 240 days per year",
+            "risk": 0.2
+          },
+          {
+            "alternative": "Glass tube",
+            "performance": {
+              "yield_increase": 0.2,
+              "electricity": 0,
+              "water": 0.2,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0
+            },
+            "KLOC": 1500,
+            "cost": 200,
+            "cost_formula": "200 one time cost",
+            "risk": 0
+          },
+          {
+            "alternative": "Digital",
+            "performance": {
+              "yield_increase": 0.3,
+              "electricity": 0,
+              "water": 0.2,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0
+            },
+            "KLOC": 5000,
+            "cost": 2400,
+            "cost_formula": "200 per month * 12 month",
+            "risk": 0.3
+          }
+          ]
+      },
+      {
+        "description": "Environment Humidity Sensor",
+        "type": "SF",
+        "importance": 1.0,
+        "decisions": [
+          {
+            "alternative": "Manual",
+            "performance": {
+              "yield_increase": 0.1,
+              "electricity": 0,
+              "water": 0.2,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0
+            },
+            "KLOC": 5000,
+            "cost": 600,
+            "cost_formula": "15 per hour * 1/6 hour * 240 days per year",
+            "risk": 0.2
+          },
+          {
+            "alternative": "Sensor",
+            "performance": {
+              "yield_increase": 0.2,
+              "electricity": 0,
+              "water": 0.2,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0
+            },
+            "KLOC": 5000,
+            "cost": 500,
+            "cost_formula": "500 one time cost",
+            "risk": 0.3
+          }
+          ]
+      }
+    ]
+  }

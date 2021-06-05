@@ -21,11 +21,11 @@ class Outputs(db.Model):
 
 
 priceVector = {
-                'yield': 100,
-                'electricity': 10,
-                'water': 5,
-                'pesticides': 50,
-                'labor': 300
+                'yield': 63000,
+                'electricity': 900,
+                'water': 900,
+                'pesticides': 500,
+                'labor': 11200
             }
 ts = None
 r_model = TradeSpaceRhodium()
@@ -35,7 +35,7 @@ optimalSet = None
 eval_res = None
 
 numOfUsers = None
-latitude = None
+farm_area = None
 sampEn = None
 rainfall = None
 cost_range = None
@@ -78,7 +78,7 @@ def pareto():
 def update_model():
     global model
     global numOfUsers
-    global latitude
+    global farm_area
     global sampEn
     global rainfall
     global cost_range
@@ -88,14 +88,15 @@ def update_model():
         data = request.get_json()
         print(data)
         numOfUsers = int(data['numOfUsers'])
-        latitude = int(data['latitude'])
+        farm_area = int(data['farm_area'])
         sampEn = float(data['sampEn'])
         rainfall = float(data['rainfall'])
         cost_range = data['cost_range']
         perf_range = data['perf_range']
         risk_range = data['risk_range']
-        model = r_model.setupModel(r_model.farm_approach2, paretoSet, numOfUsers, latitude,
+        model = r_model.setupModel(r_model.farm_approach_dylan, paretoSet, numOfUsers, farm_area,
                                    sampEn, rainfall, 1, cost_range, perf_range, risk_range)
+        r_model.setPriceVector(priceVector)
     res = make_response("Update Model Success")
     res.status = '200'
     return res
@@ -114,7 +115,7 @@ def optimize():
 @app.route('/policy_eval')
 def policy_eval():
     global eval_res
-    eval_res = r_model.policyEval(model, optimalSet['node'], numOfUsers, latitude, sampEn, rainfall, 1)
+    eval_res = r_model.policyEval(model, optimalSet['node'], numOfUsers, farm_area, sampEn, rainfall, 1)
     res = make_response("Eval Success")
     res.status = '200'
     return res
@@ -122,7 +123,7 @@ def policy_eval():
 @app.route('/sd')
 def scenario_discovery():
     box = r_model.SD(eval_res, model, perf_range, cost_range, risk_range)
-    # r_model.SA(model, optimalSet['node'], numOfUsers, latitude, sampEn, rainfall, 1)
+    # r_model.SA(model, optimalSet['node'], numOfUsers, farm_area, sampEn, rainfall, 1)
     res = make_response("SD Success")
     res.status = '200'
     res.headers['stats'] = box
@@ -130,7 +131,7 @@ def scenario_discovery():
 
 @app.route('/sa')
 def sensitivity_analysis():
-    stats = r_model.SA(model, optimalSet['node'], numOfUsers, latitude, sampEn, rainfall, 1)
+    stats = r_model.SA(model, optimalSet['node'], numOfUsers, farm_area, sampEn, rainfall, 1)
     res = make_response("SA Success")
     res.status = '200'
     res.headers['stats'] = stats

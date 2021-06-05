@@ -1,12 +1,12 @@
 {
     "Decisions": [
       {
-        "description": "sensor information",
+        "description": "Farm Sensor",
         "type": "DS",
         "importance": 1.0,
         "decisions": [
           {
-            "alternative": "Crop",
+            "alternative": "Water Potential",
             "performance": {
               "yield_increase": 0.1,
               "electricity": 0,
@@ -16,11 +16,11 @@
               "computation": 0.01
             },
             "KLOC": 5000,
-            "cost": 5000,
+            "cost": 6.5,
             "risk": 0
           },
           {
-            "alternative": "Animal",
+            "alternative": "Weather Station",
             "performance": {
               "yield_increase": 0.1,
               "electricity": 0,
@@ -30,11 +30,11 @@
               "computation": 0.01
             },
             "KLOC": 1500,
-            "cost": 10000,
+            "cost": 10.7,
             "risk": 0
           },
           {
-            "alternative": "Resources",
+            "alternative": "Soil Moisture",
             "performance": {
               "yield_increase": 0.1,
               "electricity": 0,
@@ -44,18 +44,18 @@
               "computation": 0.02
             },
             "KLOC": 5000,
-            "cost": 15000,
+            "cost": 2.2,
             "risk": 0
           }
           ]
       },
       {
-        "description": "iOT Devices",
+        "description": "Microcontroller",
         "type": "SF",
         "importance": 0.75,
         "decisions": [
           {
-            "alternative": "Farmbeats",
+            "alternative": "Farmbeats Sensorbox",
             "performance": {
               "yield_increase": 0.45,
               "electricity": 0.1,
@@ -65,11 +65,11 @@
               "computation": 0.1
             },
             "KLOC": 5000,
-            "cost": 500,
+            "cost": 100,
             "risk": 0
           },
           {
-            "alternative": "Own Devices",
+            "alternative": "CR6 Datalogger",
             "performance": {
               "yield_increase": 0.15,
               "electricity": 0.5,
@@ -79,11 +79,11 @@
               "computation": 0.075
             },
             "KLOC": 1500,
-            "cost": 2000,
+            "cost": 500,
             "risk": 0
           },
           {
-            "alternative": "Other thrid parties",
+            "alternative": "Arduino",
             "performance": {
               "yield_increase": 0.3,
               "electricity": 0.3,
@@ -93,18 +93,18 @@
               "computation": 0.09
             },
             "KLOC": 250,
-            "cost": 1000,
+            "cost": 15,
             "risk": 0
           }
           ]
       },
       {
-        "description": "User Interface",
-        "type": "DS",
+        "description": "Wireless Communication",
+        "type": "SF",
         "importance": 0.5,
         "decisions": [
           {
-            "alternative": "Mobile Application",
+            "alternative": "Bluetooth",
             "performance": {
               "yield_increase": 0.1,
               "electricity": 0,
@@ -114,11 +114,11 @@
               "computation": 0.1
             },
             "KLOC": 5000,
-            "cost": 100000,
+            "cost": 7.03,
             "risk": 0
           },
           {
-            "alternative": "Website",
+            "alternative": "LoRa",
             "performance": {
               "yield_increase": 0.1,
               "electricity": 0,
@@ -128,11 +128,11 @@
               "computation": 0.1
             },
             "KLOC": 1500,
-            "cost": 30000,
+            "cost": 61.36,
             "risk": 0
           },
           {
-            "alternative": "Text Messeges",
+            "alternative": "TVWS",
             "performance": {
               "yield_increase": 0.1,
               "electricity": 0,
@@ -142,18 +142,18 @@
               "computation": 0.1
             },
             "KLOC": 5000,
-            "cost": 5000,
+            "cost": 25,
             "risk": 0
           }
           ]
       },
       {
-        "description": "Concurrent User Request",
+        "description": "Data Storage",
         "type": "SF",
         "importance": 0.5,
         "decisions": [
           {
-            "alternative": "0-100",
+            "alternative": "Raspberry Pi",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -163,11 +163,11 @@
               "computation": 0.3
             },
             "KLOC": 5000,
-            "cost": 0,
+            "cost": 35,
             "risk": 0
           },
           {
-            "alternative": "100-500",
+            "alternative": "Cloud",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -179,30 +179,16 @@
             "KLOC": 1500,
             "cost": 0,
             "risk": 0
-          },
-          {
-            "alternative": "500-10k",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0,
-              "computation": 0.1
-            },
-            "KLOC": 250,
-            "cost": 500,
-            "risk": 0
           }
           ]
       },
       {
-        "description": "Data Storage",
+        "description": "Cloud Platform",
         "type": "SF",
         "importance": 0.25,
         "decisions": [
           {
-            "alternative": "Blockchain",
+            "alternative": "Ubidots IoT",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -212,11 +198,11 @@
               "computation": 0.15
             },
             "KLOC": 5000,
-            "cost": 250000,
+            "cost": 588,
             "risk": 0.00005
           },
           {
-            "alternative": "Cloud base",
+            "alternative": "Azure",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -226,18 +212,32 @@
               "computation": 0.5
             },
             "KLOC": 1500,
-            "cost": 200000,
+            "cost": 249,
             "risk": 0.0009
+          },
+          {
+            "alternative": "AWS",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0.1
+            },
+            "KLOC": 250,
+            "cost": 276,
+            "risk": 0
           }
         ]
       },
       {
-        "description": "Data Collection",
-        "type": "DS",
+        "description": "Plant Watering Physiological Model",
+        "type": "SF",
         "importance": 0.25,
         "decisions": [
           {
-            "alternative": "Manual",
+            "alternative": "Model Predictive Control",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -247,11 +247,11 @@
               "computation": 0.1
             },
             "KLOC": 5000,
-            "cost": 50000,
+            "cost": 0,
             "risk": 0
           },
           {
-            "alternative": "Automatic",
+            "alternative": "On/Off Control",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -261,11 +261,11 @@
               "computation": 0.5
             },
             "KLOC": 1500,
-            "cost": 250000,
+            "cost": 0,
             "risk": 0
           },
           {
-            "alternative": "Semi-automatic",
+            "alternative": "Scheduling",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -275,18 +275,18 @@
               "computation": 0.3
             },
             "KLOC": 250,
-            "cost": 100000,
+            "cost": 0,
             "risk": 0
           }
         ]
       },
       {
-        "description": "Storage Size",
-        "type": "SF",
+        "description": "Power Source",
+        "type": "DS",
         "importance": 0.25,
         "decisions": [
           {
-            "alternative": "500GB",
+            "alternative": "Electrical Cord",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -296,11 +296,11 @@
               "computation": 0.01
             },
             "KLOC": 5000,
-            "cost": 1000,
+            "cost": 0.2031,
             "risk": 0
           },
           {
-            "alternative": "500-1000GB",
+            "alternative": "Battery",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -310,11 +310,11 @@
               "computation": 0.08
             },
             "KLOC": 1500,
-            "cost": 1500,
+            "cost": 0.78,
             "risk": 0
           },
           {
-            "alternative": "1TB-10TB",
+            "alternative": "Solar",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -324,18 +324,18 @@
               "computation": 0.13
             },
             "KLOC": 250,
-            "cost": 3000,
+            "cost": 33.52,
             "risk": 0
           }
         ]
       },
       {
-        "description": "Notification Capabilities",
-        "type": "DS",
+        "description": "Irrigation Valve",
+        "type": "SF",
         "importance": 0.25,
         "decisions": [
           {
-            "alternative": "Real-time display",
+            "alternative": "B-Hyve Smart Hose",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -345,11 +345,11 @@
               "computation": 0.4
             },
             "KLOC": 1500,
-            "cost": 30000,
+            "cost": 1.65,
             "risk": 0
           },
           {
-            "alternative": "Text-messege",
+            "alternative": "Rachio",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -359,11 +359,11 @@
               "computation": 0.2
             },
             "KLOC": 250,
-            "cost": 15000,
+            "cost": 6.5,
             "risk": 0
           },
           {
-            "alternative": "Email",
+            "alternative": "Raspberry Pi",
             "performance": {
               "yield_increase": 0,
               "electricity": 0,
@@ -373,108 +373,10 @@
               "computation": 0.1
             },
             "KLOC": 5000,
-            "cost": 5000,
+            "cost": 1.5,
             "risk": 0
           }
         ]
-      },
-      {
-        "description": "File Exchange Type",
-        "type": "SF",
-        "importance": 0.125,
-        "decisions": [
-          {
-            "alternative": "XML",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0,
-              "computation": 0.13
-            },
-            "KLOC": 5000,
-            "cost": 5000,
-            "risk": 0
-          },
-          {
-            "alternative": "CSV",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0,
-              "computation": 0.03
-            },
-            "KLOC": 1500,
-            "cost": 3000,
-            "risk": 0
-          },
-          {
-            "alternative": "JSON",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0,
-              "computation": 0.2
-            },
-            "KLOC": 250,
-            "cost": 1000,
-            "risk": 0
-          }
-        ]
-      },
-      {
-        "description": "ML Model",
-        "type": "SF",
-        "importance": 1.0,
-        "decisions": [
-          {
-            "alternative": "Bayesian",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0,
-              "computation": 0.8
-            },
-            "KLOC": 5000,
-            "cost": 500000,
-            "risk": 0.15
-          },
-          {
-            "alternative": "Regression",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0,
-              "computation": 0.4
-            },
-            "KLOC": 1500,
-            "cost": 15000,
-            "risk": 0.1
-          },
-          {
-            "alternative": "Deep Learning",
-            "performance": {
-              "yield_increase": 0,
-              "electricity": 0,
-              "water": 0,
-              "pesticides": 0,
-              "labor": 0,
-              "computation": 1.0
-            },
-            "KLOC": 250,
-            "cost": 25000,
-            "risk": 0.2
-          }
-          ]
       }
     ]
   }
