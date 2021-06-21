@@ -26,8 +26,8 @@
             <form action="/" method="POST" >
                 <label for="crop">Crop Type: </label>
                 <input type="text" name="crop" id="crop" value="0"><br>
-                <label for="latitude">Latitude: </label>
-                <input type="text" name="latitude" id="latitude" value="45"><br>
+                <label for="farm_area">Farm Area (acres): </label>
+                <input type="text" name="farm_area" id="farm_area" value="444"><br>
                 <label for="numOfUsers">User Amount: </label>
                 <input type="text" name="numOfUsers" id="numOfUsers" value="1000"><br>
                 <label for="sampEn">SampEn: </label>
@@ -92,7 +92,7 @@
 
 <script id="controller">
     let crop = document.getElementById("crop")
-    let latitude = document.getElementById("latitude")
+    let farm_area = document.getElementById("farm_area")
     let numOfUsers = document.getElementById("numOfUsers")
     let sampEn = document.getElementById("sampEn")
     let rainfall = document.getElementById("rainfall")
@@ -172,39 +172,41 @@
         $( "#cost-range" ).slider({
             range: true,
             min: 0,
-            max: 1000,
-            values: [ 0, 1000 ],
+            max: cost_range[1] / 1000 * 2,
+            values: [ cost_range[0]/1000, cost_range[1]/1000 ],
             slide: function( event, ui ) {
-                $( "#cost" ).val( ui.values[ 0 ] + "k ~ " + ui.values[ 1 ] + "k" );
-                cost_range = ui.values;
+                $( "#cost" ).val( ui.values[ 0 ] + "K ~ " + ui.values[ 1 ] + "K" );
+                cost_range = [ui.values[ 0 ] * 1000, ui.values[ 1 ] * 1000];
             }
         });
-        $( "#cost" ).val( $( "#cost-range" ).slider( "values", 0 ) + "k ~ " + $( "#cost-range" ).slider( "values", 1 ) + "k" );
+        $( "#cost" ).val( $( "#cost-range" ).slider( "values", 0 ) + "K ~ " + $( "#cost-range" ).slider( "values", 1 ) + "K" );
 
 
         $( "#perf-range" ).slider({
             range: true,
             min: 0,
-            max: 1500,
-            values: [ 0, 1500 ],
+            max: perf_range[1] / 1000000 * 2,
+            values: [ perf_range[0]/1000000, perf_range[1]/1000000 ],
             slide: function( event, ui ) {
-                $( "#performance" ).val( ui.values[ 0 ] + " ~ " + ui.values[ 1 ] );
-                perf_range = ui.values;
+                $( "#performance" ).val( ui.values[ 0 ] + "M ~ " + ui.values[ 1 ] + "M" );
+                perf_range = [ui.values[ 0 ] * 1000000, ui.values[ 1 ] * 1000000];
             }
         });
-        $( "#performance" ).val( $( "#perf-range" ).slider( "values", 0 ) + " ~ " + $( "#perf-range" ).slider( "values", 1 ) );
+        $( "#performance" ).val( $( "#perf-range" ).slider( "values", 0 ) + "M ~ " + $( "#perf-range" ).slider( "values", 1 ) + "M" );
 
         $( "#risk-range" ).slider({
             range: true,
             min: 0,
-            max: 1,
-            values: [ 0, 1 ],
+            max: 10,
+            values: [ risk_range[0], risk_range[1] ],
             slide: function( event, ui ) {
                 $( "#risk" ).val( ui.values[ 0 ] + " ~ " + ui.values[ 1 ] );
                 risk_range = ui.values;
             }
         });
         $( "#risk" ).val( $( "#risk-range" ).slider( "values", 0 ) + " ~ " + $( "#risk-range" ).slider( "values", 1 ) );
+
+        metric_area.hidden = false;
     }
 
 
@@ -245,8 +247,6 @@
                 plot_pareto_front(id);
                 insertResults("       ", "text", null);
                 btn_update_model.disabled = false;
-                updateMetricRange();
-                metric_area.hidden = false;
             });
     });
 
@@ -254,7 +254,7 @@
         insertText("Updated Model");
         insertResults("----------- Update Uncertainty Model -----------", "h3", null);
         let p = insertResults("Pending results......", "text", null);
-        let data = {rainfall: rainfall.value, latitude: latitude.value,
+        let data = {rainfall: rainfall.value, farm_area: farm_area.value,
             numOfUsers: numOfUsers.value, sampEn: sampEn.value,
             crop: crop.value, cost_range: cost_range, perf_range: perf_range, risk_range: risk_range};
         fetch("/update_model", {
@@ -266,7 +266,7 @@
         }).then(res => {
                 p.innerText = "The updated uncertainty model:";
                 insertResults("Crop Type: " + crop.value, "text", null);
-                insertResults("Latitude: " + latitude.value, "text", null);
+                insertResults("farm_area: " + farm_area.value, "text", null);
                 insertResults("Number of Users: " + numOfUsers.value, "text", null);
                 insertResults("SampEn: " + sampEn.value, "text", null);
                 insertResults("Precipitation: " + rainfall.value, "text", null);
@@ -367,7 +367,7 @@
                 marker: {
                     color: 'rgb(24,182,69)',
                     opacity: 0.6,
-                    size: 2
+                    size: 5
                 },
                 hovertemplate:
                 "Cost: %{y}<br>" +
@@ -388,13 +388,7 @@
                 // }
             ];
 
-            // Get metric range from dataset
-            //console.log(data[0].y);
-            // let costs = data[0].y.map(el => parseInt(el))
-            // let perfs = data[0].x.map(el => parseInt(el))
-            // cost_range = [Math.min(...costs), Math.max(...costs)]
-            // perf_range = [Math.min(...perfs), Math.max(...perfs)]
-            console.log(cost_range)
+
 
             var layout = {
                 autosize: true,
@@ -458,6 +452,8 @@
                 }
                 alert('Policy Selected:\n\n'+pts);
             });
+
+
         });
     }
 
@@ -492,7 +488,19 @@
                 "Performance: %{x}<br>" +
                 "Risk: %{z}<br>"
             }];
-            console.log(data);
+            // console.log(Math.max(data.x));
+
+            // Get metric range from dataset
+            console.log(data[0].y);
+            let pareto_costs = data[0].y.map(el => parseInt(el))
+            let pareto_perfs = data[0].x.map(el => parseInt(el))
+            let pareto_risks = data[0].z.map(el => parseInt(el))
+            cost_range = [Math.min(...pareto_costs), Math.max(...pareto_costs)]
+            perf_range = [Math.min(...pareto_perfs), Math.max(...pareto_perfs)]
+            risk_range = [Math.min(...pareto_risks), Math.max(...pareto_risks)]
+            console.log(cost_range)
+            console.log(perf_range)
+            console.log(risk_range)
 
             var layout = {
                 autosize: true,
@@ -534,6 +542,7 @@
                 }
                 alert('Policy Selected:\n\n'+pts);
             });
+            updateMetricRange()
         });
     }
 
@@ -541,8 +550,10 @@
 
         Plotly.d3.csv("{{ url_for('static', filename='rhodium_policy_eval.csv') }}", function (err, rows) {
 
-            var perf = [], cost = [], risk = [], numOfUsers = [], latitude = [], sampEn = [], rainfall = [], index = [], color = [], opacity = []
+            var perf = [], cost = [], risk = [], numOfUsers = [], farm_area = [], sampEn = [], rainfall = [], index = [], color = [], opacity = []
             var colorway = ['#000000','#f8a6c1' ,'#ec4ac0','#fcaf50','#f3cec9', '#e7a4b6', '#cd7eaf', '#a262a9', '#6f4d96', '#50fc67', '#182844']
+
+            console.log(rows.length)
 
             for (var i = 0; i < rows.length; i++) {
                 let row = rows[i];
@@ -550,7 +561,7 @@
                 cost.push(row["cost"]);
                 risk.push(row["risk"]);
                 numOfUsers.push(Math.abs(row["numOfUsers"] - 1000));
-                latitude.push(row["latitude"]);
+                farm_area.push(row["farm_area"]);
                 sampEn.push(Math.abs(row["sampEn"] - 2.68) * 300);
                 rainfall.push(row["rainfall"]);
                 index.push(row["index"]);
@@ -572,7 +583,7 @@
                 y: cost,
                 z: risk,
                 numOfUsers: numOfUsers,
-                latitude: latitude,
+                farm_area: farm_area,
                 sampEn: sampEn,
                 rainfall: rainfall,
                 mode: 'markers',
@@ -594,6 +605,15 @@
                 "Risk: %{z}<br>"
             }];
             console.log(index);
+            let pareto_costs = data[0].y.map(el => parseInt(el))
+            let pareto_perfs = data[0].x.map(el => parseInt(el))
+            let pareto_risks = data[0].z.map(el => parseInt(el))
+            cost_range = [Math.min(...pareto_costs), Math.max(...pareto_costs)]
+            perf_range = [Math.min(...pareto_perfs), Math.max(...pareto_perfs)]
+            risk_range = [Math.min(...pareto_risks), Math.max(...pareto_risks)]
+            console.log(cost_range)
+            console.log(perf_range)
+            console.log(risk_range)
 
             var layout = {
                 autosize: true,
@@ -648,16 +668,18 @@
             Plotly.newPlot(div, data, layout, {displayModeBar: false});
 
             document.getElementById(div).on('plotly_click', function(data){
+                console.log(data)
                 var pts = '';
                 for(var i=0; i < data.points.length; i++){
+                    index = data.points[i].pointNumber;
                     pts = 'Performance: '+data.points[i].x +'\n' +
                           'Cost: '+ data.points[i].y + '\n' +
                           'Risk: ' + data.points[i].z + '\n\n' +
                           'Uncertainty: \n' +
-                          'Number of Users: ' + data.points[i].data.numOfUsers[i] + '\n' +
-                          'Latitude: ' + data.points[i].data.latitude[i] + '\n' +
-                          'Rainfall: ' + data.points[i].data.rainfall[i] + '\n' +
-                          'SampEn: ' + data.points[i].data.sampEn[i] + '\n';
+                          'Number of Users: ' + data.points[i].data.numOfUsers[index] + '\n' +
+                          'farm_area: ' + data.points[i].data.farm_area[index] + '\n' +
+                          'Rainfall: ' + data.points[i].data.rainfall[index] + '\n' +
+                          'SampEn: ' + data.points[i].data.sampEn[index] + '\n';
                 }
                 alert('Policy Selected:\n\n'+pts);
             });

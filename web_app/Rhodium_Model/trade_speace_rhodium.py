@@ -12,7 +12,13 @@ import json
 
 class TradeSpaceRhodium():
 
-    def farm_approach2(self, node, numOfUsers, latitude, crop_type, sampEn, rainfall):
+    PRICE_VECTOR = []
+
+    def setPriceVector(self, priceVector):
+        global PRICE_VECTOR
+        PRICE_VECTOR = priceVector
+
+    def farm_approach_old(self, node, numOfUsers, latitude, crop_type, sampEn, rainfall):
         performance = node['perf']
         risk = node['risk']
         policy = node['policy']
@@ -42,9 +48,97 @@ class TradeSpaceRhodium():
         # predicted_yield = regression_rainfall_yield(crop_type, rainfall)
         risk += data_storage_risk
         policy_names = node['policy_names']
-
         return performance, cost, risk, node, policy_names
 
+    def farm_approach(self, node, numOfUsers, farm_area, crop_type, sampEn, rainfall):
+        performance = node['perf']
+        risk = node['risk']
+        # cost = node['cost']
+        policy = node['policy']
+        data_storage_risk = 0
+        maintenance_cost = 0
+        hardware_cost = 0
+        sensor_num = math.ceil(farm_area/20)
+        mc_num = math.ceil(sensor_num/10)
+
+        for decision in policy:
+            d_perf = decision.getPerf()
+            d_cost = decision.getCost()
+            d_risk = decision.getRisk()
+            # if decision.name == 'Water Potential':
+            #     risk = risk - d_risk + (1 / 9 * (sampEn ** 2) + 1) * d_risk + (latitude / 1000)
+            # elif decision.name == 'Weather Station':
+            #     performance = performance - d_perf + (-1 / 9 * (sampEn ** 2) + 1) * d_perf
+            # elif decision.name == 'Soil Moisture':
+            #     risk = risk - d_risk + (1 / 9 * (sampEn ** 2) + 1) * d_risk
+            #     # TODO: Soil type affects performance
+            # elif decision.name == 'Farmbeats Sensorbox':
+            #     risk = risk - d_risk + (1 / 9 * (sampEn ** 2) + 1) * d_risk
+            # elif decision.name == 'Bluetooth':
+            #     None # TODO: Farm area affects performance
+            # elif decision.name == 'Raspberry Pi':
+            #     None # TODO: Number of users increases cost
+            # elif decision.name == 'Cloud':
+            #     cost = cost - d_cost + ((1/numOfUsers + 1) * d_cost)
+            if decision.description == 'Farm Sensor':
+                risk = risk - d_risk + (1 / 9 * (sampEn ** 2) + 1) * d_risk
+                performance = performance - d_perf + (-1 / 9 * (sampEn ** 2) + 1) * d_perf
+                hardware_cost += d_cost * sensor_num
+            elif decision.description == 'Microcontroller':
+                hardware_cost += d_cost * mc_num
+            elif decision.description == 'Power Source':
+                risk = risk - d_risk + (1 / 9 * (sampEn ** 2) + 1)
+            elif decision.name == 'Model Predictive Control':
+                risk = risk - d_risk + (1 / 9 * (sampEn ** 2) + 1)
+            elif decision.description == 'Data Storage':
+                maintenance_cost += d_cost
+                data_storage_risk += d_risk
+            elif decision.description == 'Irrigation Valve':
+                hardware_cost += d_cost * sensor_num
+
+        maintenance_cost = hardware_cost + (maintenance_cost / numOfUsers)
+        cost = maintenance_cost + hardware_cost * numOfUsers
+        policy_names = node['policy_names']
+        return performance, cost, risk, node, policy_names
+
+    def farm_approach_dylan(self, node, numOfUsers, farm_area, crop_type, sampEn, rainfall):
+        performance = 0
+        perfVector = node['perfVector']
+        risk = 0
+        # cost = node['cost']
+        policy = node['policy']
+        data_storage_risk = 0
+        maintenance_cost = 0
+        hardware_cost = 0
+        sensor_num = math.ceil(farm_area/30)
+        mc_num = math.ceil(sensor_num/10)
+
+        for decision in policy:
+            d_cost = decision.getCost()
+            d_risk = decision.getRisk()
+            if decision.description == 'Water Tensiometer' or decision.description == 'Environment Humidity Sensor':
+                risk += (1 / 9 * (sampEn ** 2) + 1) * d_risk
+                # performance = performance - d_perf + (-1 / 9 * (sampEn ** 2) + 1) * d_perf
+                hardware_cost += d_cost * sensor_num
+            elif decision.description == 'Microcontroller':
+                hardware_cost += d_cost * mc_num
+            elif decision.name == 'Model Predictive Control':
+                risk += (1 / 9 * (sampEn ** 2) + 1) * d_risk
+            elif decision.description == 'Data Storage':
+                maintenance_cost += d_cost
+                data_storage_risk += d_risk
+            elif decision.description == 'Irrigation Valve':
+                hardware_cost += d_cost * sensor_num
+            else:
+                risk += d_risk
+
+
+        for key, value in perfVector.items():
+            performance += value * PRICE_VECTOR.get(key) * farm_area
+
+        cost = hardware_cost + (maintenance_cost / numOfUsers)
+        policy_names = node['policy_names']
+        return performance, cost, risk, node, policy_names
 
     # Maps crop type to a linear regression between rainfall and crop yield
     def regression_rainfall_yield(self, crop_type, rainfall):
@@ -62,7 +156,7 @@ class TradeSpaceRhodium():
         model = Model(func)
         model.parameters = [Parameter("node"),
                             Parameter("numOfUsers", default_value=input_numOfUsers),
-                            Parameter("latitude", default_value=input_latitude),
+                            Parameter("farm_area", default_value=input_latitude),
                             Parameter("sampEn", default_value=input_sampleEn),
                             Parameter("rainfall", default_value=input_rainFall),
                             Parameter("crop_type", default_value=input_cropType)]
@@ -73,15 +167,15 @@ class TradeSpaceRhodium():
                            Response("node", Response.INFO),
                            Response("policy_names", Response.INFO)]
 
-        model.constraints = [Constraint("cost >= " + str(cost_range[0] * 1000)),
-                             Constraint("cost <= " + str(cost_range[1] * 1000)),
-                             Constraint("performance >= " + str(perf_range[0])),
-                             Constraint("performance <= " + str(perf_range[1]))]
+        # model.constraints = [Constraint("cost >= " + str(cost_range[0] * 1000)),
+        #                      Constraint("cost <= " + str(cost_range[1] * 1000)),
+        #                      Constraint("performance >= " + str(perf_range[0])),
+        #                      Constraint("performance <= " + str(perf_range[1]))]
 
         model.levers = [CategoricalLever("node", nodes)]
 
-        model.uncertainties = [NormalUncertainty("numOfUsers", input_numOfUsers, 100),
-                               NormalUncertainty("latitude", input_latitude, 3),
+        model.uncertainties = [UniformUncertainty("numOfUsers", 0, input_numOfUsers*2),
+                               UniformUncertainty("farm_area", input_latitude/2, input_latitude+input_latitude/2),
                                NormalUncertainty("sampEn", input_sampleEn, 0.136),
                                NormalUncertainty("rainfall", input_rainFall, 555.243)]
         return model
@@ -89,7 +183,7 @@ class TradeSpaceRhodium():
 
     # Optimization
     def optimizeModel(self, model):
-        output = optimize(model, "NSGAII", 10000)
+        output = optimize(model, "NSGAII", 1000)
         print('\x1b[0;32;44m' + "Found", len(output), "optimal policies!" + '\x1b[0m')
         # fig = scatter3d(model, output, c="risk",
         #                 brush=[Brush("performance > 500"), Brush("performance <= 500")])
@@ -112,7 +206,7 @@ class TradeSpaceRhodium():
             results = evaluate(model, update(SOWs, sample))
             index = [i] * 1000
             rd_res.append(results)
-            results = results.as_dataframe(['performance', 'cost', 'risk', 'numOfUsers', 'latitude', 'sampEn', 'rainfall'])
+            results = results.as_dataframe(['performance', 'cost', 'risk', 'numOfUsers', 'farm_area', 'sampEn', 'rainfall'])
             results['index'] = index
             df = df.append(results, ignore_index=True)
 
@@ -165,11 +259,6 @@ class TradeSpaceRhodium():
         scatter.show()
         ppt = box.show_ppt()
         ppt.show()
-
-        print(model.uncertainties.keys())
-        print(p.stats)
-        print(p.limits)
-        print(p.find_all())
 
         return p.stats.to_json()
 

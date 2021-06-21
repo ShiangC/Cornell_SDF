@@ -22,7 +22,7 @@ class Tradespace:
     # Produce a pool of decisions
     def make_decision_pool(self):
         json_decisions = []
-        read = open("Decision_Model/decision_evaluation.json", "r")
+        read = open("Decision_Model/decision_dylan.json", "r")
         json_decisions = json.load(read)['Decisions']
         read.close()
         decsion_pool = []
@@ -34,6 +34,7 @@ class Tradespace:
                                           d['performance'], d['cost'], d['risk'], self.priceVector) for d in decision['decisions']]
             }
             decsion_pool.append(archs)
+            print(archs)
         return decsion_pool
 
     # Create a list representing a policy
@@ -71,17 +72,40 @@ class Tradespace:
         return policy_pool
 
     def makeNodes(self, policy):
+        perfVector = {
+                'yield': 0,
+                'electricity': 0,
+                'water': 0,
+                'pesticides': 0,
+                'labor': 0
+            }
         total_perf = 0
         total_cost = 0
         total_risk = 0
+
         for decision in policy:
-            total_perf += decision.getPerf()
+            perfVector = decision.getPerf(perfVector)
             total_cost += decision.getCost()
             total_risk += decision.getRisk()
+
+        for key, value in perfVector.items():
+            total_perf += value
+
+        # return {
+        #     'policy_names': list(map(Decision.getName, policy)),
+        #     'perf': 1- np.exp(-total_perf),
+        #     'cost': total_cost,
+        #     'risk': 1-np.exp(-total_risk),
+        #     'perfVector': perfVector,
+        #     'policy_num': len(policy),
+        #     'policy': policy
+        #     }
         return {
             'policy_names': list(map(Decision.getName, policy)),
-            'perf': total_perf, 'cost': total_cost,
+            'perf': total_perf,
+            'cost': total_cost,
             'risk': total_risk,
+            'perfVector': perfVector,
             'policy_num': len(policy),
             'policy': policy
             }
