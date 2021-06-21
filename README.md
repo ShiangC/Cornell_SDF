@@ -33,6 +33,7 @@ Please install all software listed below. You should allow all three programs to
 - Python 3.6 (Anaconda Python is strongly recommended by Rhodium and its dependencies. Note that earlier or later versions may not support the features of this software.)
 - Git
 - [J3](https://github.com/Project-Platypus/J3) (for visualization)
+- Anaconda
 
 ### Prerequisite  Libraries
 Please install all libraries listed below to your python environment.
