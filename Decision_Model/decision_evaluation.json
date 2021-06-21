@@ -1,0 +1,382 @@
+{
+    "Decisions": [
+      {
+        "description": "Farm Sensor",
+        "type": "DS",
+        "importance": 1.0,
+        "decisions": [
+          {
+            "alternative": "Water Potential",
+            "performance": {
+              "yield_increase": 0.1,
+              "electricity": 0,
+              "water": 0.2,
+              "pesticides": 0.2,
+              "labor": 0.2,
+              "computation": 0.01
+            },
+            "KLOC": 5000,
+            "cost": 6.5,
+            "risk": 0
+          },
+          {
+            "alternative": "Weather Station",
+            "performance": {
+              "yield_increase": 0.1,
+              "electricity": 0,
+              "water": 0.1,
+              "pesticides": 0.1,
+              "labor": 0.1,
+              "computation": 0.01
+            },
+            "KLOC": 1500,
+            "cost": 10.7,
+            "risk": 0
+          },
+          {
+            "alternative": "Soil Moisture",
+            "performance": {
+              "yield_increase": 0.1,
+              "electricity": 0,
+              "water": 0.5,
+              "pesticides": 0.5,
+              "labor": 0.4,
+              "computation": 0.02
+            },
+            "KLOC": 5000,
+            "cost": 2.2,
+            "risk": 0
+          }
+          ]
+      },
+      {
+        "description": "Microcontroller",
+        "type": "SF",
+        "importance": 0.75,
+        "decisions": [
+          {
+            "alternative": "Farmbeats Sensorbox",
+            "performance": {
+              "yield_increase": 0.45,
+              "electricity": 0.1,
+              "water": 0.35,
+              "pesticides": 0.35,
+              "labor": 0.3,
+              "computation": 0.1
+            },
+            "KLOC": 5000,
+            "cost": 100,
+            "risk": 0
+          },
+          {
+            "alternative": "CR6 Datalogger",
+            "performance": {
+              "yield_increase": 0.15,
+              "electricity": 0.5,
+              "water": 0.1,
+              "pesticides": 0.1,
+              "labor": 0.15,
+              "computation": 0.075
+            },
+            "KLOC": 1500,
+            "cost": 500,
+            "risk": 0
+          },
+          {
+            "alternative": "Arduino",
+            "performance": {
+              "yield_increase": 0.3,
+              "electricity": 0.3,
+              "water": 0.2,
+              "pesticides": 0.2,
+              "labor": 0.2,
+              "computation": 0.09
+            },
+            "KLOC": 250,
+            "cost": 15,
+            "risk": 0
+          }
+          ]
+      },
+      {
+        "description": "Wireless Communication",
+        "type": "SF",
+        "importance": 0.5,
+        "decisions": [
+          {
+            "alternative": "Bluetooth",
+            "performance": {
+              "yield_increase": 0.1,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.3,
+              "computation": 0.1
+            },
+            "KLOC": 5000,
+            "cost": 7.03,
+            "risk": 0
+          },
+          {
+            "alternative": "LoRa",
+            "performance": {
+              "yield_increase": 0.1,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.5,
+              "computation": 0.1
+            },
+            "KLOC": 1500,
+            "cost": 61.36,
+            "risk": 0
+          },
+          {
+            "alternative": "TVWS",
+            "performance": {
+              "yield_increase": 0.1,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.2,
+              "computation": 0.1
+            },
+            "KLOC": 5000,
+            "cost": 25,
+            "risk": 0
+          }
+          ]
+      },
+      {
+        "description": "Data Storage",
+        "type": "SF",
+        "importance": 0.5,
+        "decisions": [
+          {
+            "alternative": "Raspberry Pi",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0.3
+            },
+            "KLOC": 5000,
+            "cost": 35,
+            "risk": 0
+          },
+          {
+            "alternative": "Cloud",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0.2
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          }
+          ]
+      },
+      {
+        "description": "Cloud Platform",
+        "type": "SF",
+        "importance": 0.25,
+        "decisions": [
+          {
+            "alternative": "Ubidots IoT",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0.15
+            },
+            "KLOC": 5000,
+            "cost": 588,
+            "risk": 0.00005
+          },
+          {
+            "alternative": "Azure",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0.5
+            },
+            "KLOC": 1500,
+            "cost": 249,
+            "risk": 0.0009
+          },
+          {
+            "alternative": "AWS",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0.1
+            },
+            "KLOC": 250,
+            "cost": 276,
+            "risk": 0
+          }
+        ]
+      },
+      {
+        "description": "Plant Watering Physiological Model",
+        "type": "SF",
+        "importance": 0.25,
+        "decisions": [
+          {
+            "alternative": "Model Predictive Control",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.5,
+              "computation": 0.1
+            },
+            "KLOC": 5000,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "On/Off Control",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.5,
+              "computation": 0.5
+            },
+            "KLOC": 1500,
+            "cost": 0,
+            "risk": 0
+          },
+          {
+            "alternative": "Scheduling",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.2,
+              "computation": 0.3
+            },
+            "KLOC": 250,
+            "cost": 0,
+            "risk": 0
+          }
+        ]
+      },
+      {
+        "description": "Power Source",
+        "type": "DS",
+        "importance": 0.25,
+        "decisions": [
+          {
+            "alternative": "Electrical Cord",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.05,
+              "computation": 0.01
+            },
+            "KLOC": 5000,
+            "cost": 0.2031,
+            "risk": 0
+          },
+          {
+            "alternative": "Battery",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.1,
+              "computation": 0.08
+            },
+            "KLOC": 1500,
+            "cost": 0.78,
+            "risk": 0
+          },
+          {
+            "alternative": "Solar",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.2,
+              "computation": 0.13
+            },
+            "KLOC": 250,
+            "cost": 33.52,
+            "risk": 0
+          }
+        ]
+      },
+      {
+        "description": "Irrigation Valve",
+        "type": "SF",
+        "importance": 0.25,
+        "decisions": [
+          {
+            "alternative": "B-Hyve Smart Hose",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0.1,
+              "computation": 0.4
+            },
+            "KLOC": 1500,
+            "cost": 1.65,
+            "risk": 0
+          },
+          {
+            "alternative": "Rachio",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0.2
+            },
+            "KLOC": 250,
+            "cost": 6.5,
+            "risk": 0
+          },
+          {
+            "alternative": "Raspberry Pi",
+            "performance": {
+              "yield_increase": 0,
+              "electricity": 0,
+              "water": 0,
+              "pesticides": 0,
+              "labor": 0,
+              "computation": 0.1
+            },
+            "KLOC": 5000,
+            "cost": 1.5,
+            "risk": 0
+          }
+        ]
+      }
+    ]
+  }
