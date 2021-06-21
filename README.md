@@ -45,9 +45,12 @@ Please install all libraries listed below to your python environment.
 1. Clone this git repository
 - In the command prompt, create a folder where the code repositories will be stored
 - Run: `git clone https://github.com/yifz98/farmVal_Rhodium.git`
-2. Run Tradespace Exploration Tool
-- Navigate to `farmVal_Rhodium/code`
-- Run `python trade_speace_rhodium.py`
+2. Create conda environment
+- In the folder where the repository is cloned, run `conda env create`
+4. Run Tradespace Exploration Tool Web Interface
+- In the folder where the repository is cloned,
+- Run `python app.py`
+- Open the web page in the browser.
 
 
 ## Dependencies
