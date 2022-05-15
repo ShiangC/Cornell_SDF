@@ -1,5 +1,0 @@
-README.md
-J3Py.egg-info/PKG-INFO
-J3Py.egg-info/SOURCES.txt
-J3Py.egg-info/dependency_links.txt
-J3Py.egg-info/top_level.txt
