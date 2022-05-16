@@ -18,6 +18,7 @@ Please install all software listed below. You should allow all three programs to
 - Run: `git clone https://github.com/yifz98/farmVal_Rhodium.git`
 2. Create conda environment
 - In the folder where the repository is cloned, run `conda env create -f tradespace_webapp.yaml`
+- Activate the install conda environement by running `conda tradespace_webapp activate`
 3. Install Rhodium related libraries to the 'tradespace_webapp' conda environment
 - [Rhodium, PRIM, and Platypus](https://github.com/Project-Platypus/Rhodium/blob/master/INSTALL.md) (Follow instructions here)
 4. Run Tradespace Exploration Tool Web App
