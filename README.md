@@ -23,78 +23,26 @@ The tool consists of 4 main modules: Decision module, Rhodium module (Hadjimicha
 
 ### Prerequisite  Softwares
 Please install all software listed below. You should allow all three programs to update your PATH environment variable.
-- Python 3.6 (Anaconda Python is strongly recommended by Rhodium and its dependencies. Note that earlier or later versions may not support the features of this software.)
+- Python 3.9
 - Git
-- [J3](https://github.com/Project-Platypus/J3) (for visualization)
 - Anaconda
 
-### Prerequisite  Libraries
-Please install all libraries listed below to your python environment.
-- [Rhodium, PRIM, and Platypus](https://github.com/Project-Platypus/Rhodium/blob/master/INSTALL.md) (Follow instructions here)
-- OApackage: run `pip install oapackage`
-- SKlearn (version lower than 0.22): run `pip install --upgrade scikit-learn==0.20.3`
-- [J3py](https://github.com/Project-Platypus/J3Py) : Download and run `python setup.py install`
 
 ### Run the code
 1. Clone this git repository
 - In the command prompt, create a folder where the code repositories will be stored
 - Run: `git clone https://github.com/yifz98/farmVal_Rhodium.git`
 2. Create conda environment
-- In the folder where the repository is cloned, run `conda env create`
+- In the folder where the repository is cloned, run `conda env create -f environment.yml  `
+3. Install related packages manually
+- [Rhodium, PRIM, and Platypus](https://github.com/Project-Platypus/Rhodium/blob/master/INSTALL.md) (Follow instructions here)
+- OApackage: run `python setup.py install` file in 'OApackage-2.7.11' folder.
+- [J3py](https://github.com/Project-Platypus/J3Py) : run `python setup.py install` file in 'J3Py-master' folder.
 4. Run Tradespace Exploration Tool Web Interface
 - In the folder where the repository is cloned,
 - Run `python app.py`
 - Open the web page in the browser.
-
-
-## Dependencies
-
-> Depending on your project, the script might depend on several other packages
-> to run. If using Python, you can use a '.yml' file specifying your dependencies.
-> You can create one and place it in the repository so subsequent users take it
-> and create a Python environment with all they need to replicate your results.
-> This section should then describe how one can set up an environment with the
-> dependencies necessary to run your code.
-
-You'll need Python *version number* to run the code.
-You can set up an environment with all dependencies using an environment manager
-like [Anaconda Python distribution](https://www.anaconda.com/download/) which
-provides the `conda` package manager.
-Anaconda can be installed in your user directory and does not interfere with
-the system Python installation.
-The required dependencies are specified in the file `environment.yml`.
-
-Run the following command in the repository folder (where `environment.yml`
-is located) to create a separate environment and install all required
-dependencies in it:
-
-    conda env create
-
-## Data
-> You need to either provide or cite the data used in your analysis.
-> Avoid cluttering your repository with a lot of raw data but instead archive and
-> mint a DOI for your data.
-
-Hadjimichael, A. (2020). My interesting dataset [Data set]. DataHub. https://doi.org/some-doi-number
-
-## Reproducing the results
-
-> Here you should include all information necessary to reproduce your results.
-> Ideally, you'd set up a makefile that automates as much as possible, but make
-> sure to provide clear step-by-step instructions for everything.
-> The following can be used as example of replicating Python code.
-
-Activate the conda environment:
-
-    source activate ENVIRONMENT_NAME
-
-or, on Windows:
-
-    activate ENVIRONMENT_NAME
-
-To build and test the software, produce all results and figures, follow these steps:
-
-> Add steps here
+- Calculations and plots will be output in 'static'
 
 
 ## License
