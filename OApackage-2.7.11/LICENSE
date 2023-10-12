@@ -1,0 +1,46 @@
+Copyright (c) 2011-2018, Pieter Eendebak <pieter.eendebak@gmail.com>
+Copyright (c) 2009, TNO Science & Industry
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  
+####################################################################################
+  
+  
+Citation notice: if you use this work or any results of this work, please cite the work
+as (see the file README.md for details):
+
+"OApackage: A Python package for generation and analysis of orthogonal arrays, optimal designs and conference designs", https://doi.org/10.21105/joss.01097
+
+
+For more information contact (pieter.eendebak@gmail.com or eric.schoen@tno.nl).
+
+
+###################################################################################
+
+This package also uses code from other works:
+
+* Eigen (see http://eigen.tuxfamily.org/, MPL2 license)
+* InfInt (by Sercan Tutar, MPL2 license)
+* bitarray (by Isaac Turner, MIT license)
+* md5.cpp (by RSA Data Security)
+* msstdint.h (by Alexander Chemeris, see https://code.google.com/p/msinttypes/)
+* oapackage._scanf (from https://github.com/joshburnett/scanf, MIT license)

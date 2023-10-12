@@ -188,7 +188,7 @@ class TradeSpaceRhodium():
         # fig = scatter3d(model, output, c="risk",
         #                 brush=[Brush("performance > 500"), Brush("performance <= 500")])
         output.as_dataframe(['performance', 'cost', 'risk', 'node', 'policy_names'])\
-              .to_csv(r'../web_app/static/rhodium_optimize.csv')
+              .to_csv(r'static/rhodium_optimize.csv')
         return output
 
 
@@ -221,7 +221,7 @@ class TradeSpaceRhodium():
             # avg_result = pd.DataFrame(average_result)
             # df = df.append(avg_result, ignore_index=True)
 
-        df.to_csv(r'../web_app/static/rhodium_policy_eval.csv')
+        df.to_csv(r'static/rhodium_policy_eval.csv')
         return rd_res
         # fig = px.parallel_coordinates(df, color="index", labels={"performance": "performance",
         #                                                               "cost": "cost", "risk": "risk",
@@ -251,10 +251,10 @@ class TradeSpaceRhodium():
         box = p.find_box()
         details = box.show_details()
         details.show()
-        details.savefig('../web_app/static/SD_detail.png')
+        details.savefig('static/SD_detail.png')
         fig = box.show_tradeoff()
         fig.show()
-        fig.savefig('../web_app/static/SD_tradeOff.png')
+        fig.savefig('static/SD_tradeOff.png')
         scatter = box.show_scatter()
         scatter.show()
         ppt = box.show_ppt()

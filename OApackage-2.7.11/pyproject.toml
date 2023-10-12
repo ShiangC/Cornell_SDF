@@ -1,0 +1,42 @@
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = ["numpy", "setuptools"]  # PEP 508 specifications.
+
+[tool.autopep8]
+max_line_length = 120
+# ignore = ["E501", "W6"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.black]
+line-length = 120
+
+[pycodestyle]
+max_line_length = 120
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",  # All warnings except below will be treated as errors
+    "ignore::DeprecationWarning:.*past\\.builtins\\.misc:45",
+    "ignore::DeprecationWarning:.*qc_snapshot_widget",
+    "ignore:::.*quantify_core\\.visualization\\.pyqt_plotmon",
+]
+
+[tool.ruff]
+select = ["E", "F", "UP", "I"]
+ignore = [ #"UP031", # use format specifiers instead of percent format
+            #"F401", # imported but unused
+        ]
+line-length = 120
+
+target-version = "py38"
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = ["oalib.py",  "../oalib.py"]
+
+[tool.mypy-oalib.py]
+follow_imports = "skip"
+ignore_errors = true

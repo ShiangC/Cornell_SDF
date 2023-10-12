@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import oapackage
 import pandas as pd
 # from j3 import J3
+import matplotlib
+matplotlib.use('Agg')
 
 
 class Tradespace:
@@ -147,8 +149,8 @@ class Tradespace:
         # optimal_set = pd.DataFrame(optimal_set)
 
         optimal_set = pd.DataFrame(optimal_set)
-        pd.DataFrame(self.TS_nodes).to_csv(r'../web_app/static/tradespace_enumeration.csv')
-        optimal_set.to_csv(r'../web_app/static/pareto_set.csv')
+        pd.DataFrame(self.TS_nodes).to_csv(r'static/tradespace_enumeration.csv')
+        optimal_set.to_csv(r'static/pareto_set.csv')
         # 3d plots
         df = pd.DataFrame(self.TS_nodes)
         h = plt.plot(df['perf'], df['cost'], df['risk'], '.b', markersize=8, label='Non Pareto-optimal')
@@ -157,7 +159,7 @@ class Tradespace:
         ax.set_ylabel('Cost')
         ax.set_zlabel('Risk')
         _ = plt.title('Pareto Front', fontsize=15)
-        plt.savefig('../web_app/static/pareto_ts.png')
+        plt.savefig('static/pareto_ts.png')
 
     # Calculating the total benefit from yield increase
     def calc_r1(self, crop_price):
