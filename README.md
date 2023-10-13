@@ -35,7 +35,7 @@ Please install all software listed below. You should allow all three programs to
 2. Create conda environment
 - In the folder where the repository is cloned, run `conda env create -f environment.yml  `
 3. Install related packages manually
-- [Rhodium, PRIM, and Platypus](https://github.com/Project-Platypus/Rhodium/blob/master/INSTALL.md) (Follow instructions here)
+- [Rhodium, PRIM, and Platypus](https://github.com/Project-Platypus/Rhodium/tree/master) (Follow instructions here)
 - OApackage: run `python setup.py install` file in 'OApackage-2.7.11' folder.
 - [J3py](https://github.com/Project-Platypus/J3Py) : run `python setup.py install` file in 'J3Py-master' folder.
 4. Run Tradespace Exploration Tool Web Interface
