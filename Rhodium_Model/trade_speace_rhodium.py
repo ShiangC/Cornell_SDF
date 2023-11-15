@@ -208,7 +208,8 @@ class TradeSpaceRhodium():
             rd_res.append(results)
             results = results.as_dataframe(['performance', 'cost', 'risk', 'numOfUsers', 'farm_area', 'sampEn', 'rainfall'])
             results['index'] = index
-            df = df.append(results, ignore_index=True)
+            # df = df.append(results, ignore_index=True)
+            df = pd.concat([df, results], ignore_index=True)
 
             # total = {'perf': 0, 'cost': 0, 'risk': 0}
             # for result in results:
